@@ -429,3 +429,32 @@
 
 (defn Extension-2 [p s r] (Wait (Tree-Case-2 p s) r))
 
+(def Eager (fn [z]
+             (fn [f]
+               (Δ z I (K (K I)) I f z))))
+
+(defn Db [x] ((d ((d (K x)) I)) (K D)))
+
+(def BF-Leaf (fn [y] (K (K y))))
+
+(defn BF-Stem [e] (fn [x]
+                    (fn [y]
+                      ((d ((d (K (K e))) (Db x)))
+                       ((d ((d K) (Db y))) (K D))))))
+
+(def BF-Fork (fn [w]
+               (fn [x]
+                 (K ((d
+                      ((d K)
+                       ((d (d (K w)))
+                        (K D))))
+                     (K (d (K x))))))))
+
+(defn On-Fork [f] (fn [x] (Δ (Fork?-2 x) (Δ x Δ f) (K (K (K x))))))
+
+(def BF (Y
+         (On-Fork
+          (Triage BF-Leaf
+                  (BF-Stem Eager)
+                  BF-Fork))))
+

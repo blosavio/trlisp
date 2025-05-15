@@ -218,9 +218,9 @@
       ΔΔ Δ Δ Δ
       ΔΔΔ Δ Δ Δ
 
-      Δ ΔΔ ΔΔΔ (Δ (Δ ΔΔΔ ΔΔΔ) (Δ ΔΔΔ ΔΔΔ))
+      ;; The following unit fails with `Extension-2`, but not `Extension`.
       ;;(Δ (Δ ΔΔ ΔΔ) (Δ ΔΔ ΔΔ)) ΔΔ I (Δ (Δ ΔΔΔ ΔΔΔ) (Δ ΔΔΔ ΔΔΔ))
-      ))
+      Δ ΔΔ ΔΔΔ (Δ (Δ ΔΔΔ ΔΔΔ) (Δ ΔΔΔ ΔΔΔ))))
   (testing "pattern: stem; arg: fork"
     (are [p s r t u] (= ((Extension-2 (Δ p) s r) (Δ t u))
                         (r (Δ t u)))
@@ -255,6 +255,23 @@
 
       ΔΔ  ΔΔ  Δ Δ ΔΔΔ ΔΔΔ
       ΔΔΔ ΔΔΔ Δ Δ ΔΔ  ΔΔ)))
+
+
+(deftest bf-extended-tests
+  (let [z Δ]
+    (are [x] (= x (BF I z))
+      (BF I z)
+      (((On-Fork (Triage BF-Leaf (BF-Stem Eager) BF-Fork)) I) BF z)
+      ((((Triage BF-Leaf (BF-Stem Eager) BF-Fork) K) K) BF z)
+      ((((BF-Stem Eager) Δ) K) BF z)
+      ((Eager (BF Δ z)) (BF (BF K z)))
+      ((Eager (Δ z)) (BF (BF K z)))
+      (BF (BF K z) (Δ z))
+      (BF (K z) (Δ z))
+      (((On-Fork (Triage BF-Leaf (BF-Stem Eager) BF-Fork)) (K z)) BF (Δ z))
+      ((((Triage BF-Leaf (BF-Stem Eager) BF-Fork) Δ) z) BF (Δ z))
+      ((BF-Leaf z) BF (Δ z))
+      z)))
 
 
 #_(run-tests)

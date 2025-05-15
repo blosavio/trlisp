@@ -662,6 +662,70 @@
       ΔΔΔ ΔΔΔ Δ Δ ΔΔ  ΔΔ)))
 
 
-#_(run-test pattern-matching-tests)
+(deftest Eager-tests
+  (are [m n] (= (n m) ((Eager m) n))
+    Δ Δ
+    Δ ΔΔ
+    ΔΔ Δ
+    Δ ΔΔΔ
+    ΔΔΔ Δ))
+
+
+(deftest Branch-First-Self-Evaluation-tests
+  (testing "pass-through evaluation"
+    (are [x] (= x (BF x))
+      Δ
+      ΔΔ
+      ΔΔΔ
+      (d Δ)))
+  (testing "basic tree pattern application"
+    (are [x y] (= (x y)
+                  (BF x y))
+      Δ Δ
+      ΔΔ ΔΔ
+      ΔΔΔ ΔΔΔ
+      (d Δ) (d Δ)
+
+      ΔΔ Δ
+      Δ ΔΔ
+      ΔΔΔ Δ
+      Δ ΔΔΔ
+
+      ΔΔ ΔΔΔ
+      ΔΔΔ ΔΔ))
+  (testing "semantic application"
+    (are [x y] (= x y)
+      K (BF I K)
+      True (BF Not False)
+      False (BF Leaf? ΔΔ)))
+  (testing "fork lemma"
+    (are [x y] (= (BF (Δ x y))
+                  ((((Triage BF-Leaf (BF-Stem Eager) BF-Fork) x) y) BF))
+      Δ Δ
+      ΔΔ ΔΔ
+      ΔΔΔ ΔΔΔ
+      (d Δ) (d Δ)))
+  (testing "fork-leaf lemma"
+    (are [y z] (= y (BF (K y) z))
+      Δ ΔΔ
+      ΔΔ ΔΔΔ
+      ΔΔΔ Δ))
+  (testing "fork-stem lemma"
+    (are [x y z] (= (BF (Δ (Δ x) y) z)
+                    ((Eager
+                      (BF x z))
+                     (BF (BF y z))))
+      Δ Δ Δ
+      ΔΔ ΔΔ ΔΔ
+      ΔΔΔ ΔΔΔ ΔΔΔ))
+  (testing "fork-fork lemma"
+    (are [w x y z] (= (BF (Δ (Δ w x) y) z)
+                      (BF (BF z w) x))
+      Δ Δ Δ Δ
+      ΔΔ ΔΔ ΔΔ ΔΔ
+      ΔΔΔ ΔΔΔ ΔΔΔ ΔΔΔ)))
+
+
+#_(run-test Branch-First-Self-Evaluation-tests)
 #_(run-tests)
 
