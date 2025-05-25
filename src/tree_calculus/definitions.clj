@@ -20,6 +20,13 @@
 (def fork? (length-is? 2))
 
 
+(defn appli-sentinel
+  [val]
+  {:UUIDv4 #uuid "88a2dfed-f333-46d8-a671-1fcdec34edc3"}
+  (throw (Exception. (str *ns* "/appli: Non-tree in the left child node of the
+ first argument. This value should be Δ or some derivative. Actual value: " val))))
+
+
 (defn appli
   "Apply tree left-hand tree `L` to right-hand tree `R`. `L` and `R` are
   \"alternate function invoke\" vectors, which, when at the head of an evaluated
@@ -62,7 +69,7 @@
     (leaf? L) (make-thingy R)
     (stem? L) (make-thingy (first L) R)
     (fork? L) (cond
-                (fn? (first L)) ::appli-sentinel
+                (fn? (first L)) (appli-sentinel (first L))
                 (leaf? (first L)) (second L)
                 (stem? (first L)) (appli (appli (second L) R)
                                          (appli (ffirst L) R))
@@ -382,8 +389,8 @@
                            (r1 (Δ x1 x2))))))
 
 (defn Fork-Case-Aux-2 [p1] (fn [x2]
-                            (fn [r2]
-                              (r2 (Δ p1 x2)))))
+                             (fn [r2]
+                               (r2 (Δ p1 x2)))))
 
 (defn Fork-Case [f] (fn [r]
                       (fn [x]
@@ -457,4 +464,63 @@
           (Triage BF-Leaf
                   (BF-Stem Eager)
                   BF-Fork))))
+
+(def Quote-Aux
+  (fn [x]
+    ((Stem? x)
+     (fn [q]
+       (Δ (x Δ) Δ (fn [x1]
+                    (K (K (q x1))))))
+     (Δ x (K Δ) (fn [x1]
+                  (fn [x2]
+                    (fn [q]
+                      (Δ (K (q x1)) (q x2)))))))))
+
+(def Quote (Y Quote-Aux))
+
+(def Root-L (fn [r]
+              (fn [y]
+                (fn [z]
+                  (r y)))))
+
+(def Root-S (fn [x]
+              (fn [r]
+                (fn [y]
+                  (fn [z]
+                    (r (Δ (Δ y z) (Δ x z))))))))
+
+(def Root-F (fn [w]
+              (fn [x]
+                (fn [r]
+                  (fn [y]
+                    (fn [z]
+                      (r (Δ (Δ z w) x))))))))
+
+(def Root-N (fn [t]
+              (fn [y]
+                (fn [r]
+                  ((((Triage Root-L
+                             Root-S
+                             Root-F)
+                     (r t)) r) y)))))
+
+(def Root-Aux (fn [a]
+                (fn [r]
+                  (Δ a Δ (fn [f]
+                           (((On-Fork Root-N) (r f)) r))))))
+
+(def Root (Y Root-Aux))
+
+(def RB-Aux (fn [x]
+              (fn [r]
+                ((Triage Δ
+                         (fn [y] (Δ (r y)))
+                         (fn [y]
+                           (fn [z]
+                             (Δ (r y) (r z)))))
+                 (Root x)))))
+
+(def RB (Y RB-Aux))
+
+(defn RF [f z] (RB (Δ (Quote f) (Quote z))))
 

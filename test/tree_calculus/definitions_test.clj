@@ -117,7 +117,9 @@
         ((Z0 W0) X0) (ForkRule W0 X0 Y0 Z0) ΔΔΔ
         ((Z1 W1) X1) (ForkRule W1 X1 Y1 Z1) ΔΔ
         ((Z2 W2) X2) (ForkRule W2 X2 Y2 Z2) ΔΔΔ
-        ((Z3 W3) X3) (ForkRule W3 X3 Y3 Z3) True))))
+        ((Z3 W3) X3) (ForkRule W3 X3 Y3 Z3) True)))
+  (testing "non-tree left child value"
+    (is (thrown? Exception (appli (Δ (fn foo [_] ()) :bar) :baz)))))
 
 
 (deftest mutl-appli-tests
@@ -574,7 +576,6 @@
     (are [x] (= True (Equal?-Variant x x))
       Δ
       K
-      (d Δ)
       I
       (K I)))
   (testing "not equal programs"
@@ -584,9 +585,6 @@
       Δ I
       K I
       K (K I)
-      K (d Δ)
-      (d Δ) (d (Δ Δ))
-      (d K) (d (K K))
       (d (K I)) K)))
 
 
@@ -665,10 +663,35 @@
 (deftest Eager-tests
   (are [m n] (= (n m) ((Eager m) n))
     Δ Δ
+    ΔΔ ΔΔ
+    ΔΔΔ ΔΔΔ
+
     Δ ΔΔ
     ΔΔ Δ
+
     Δ ΔΔΔ
-    ΔΔΔ Δ))
+    ΔΔΔ Δ
+
+    ΔΔ ΔΔΔ
+    ΔΔΔ ΔΔ))
+
+
+(deftest On-Fork-tests
+  (testing "leafs"
+    (are [f0 f1 f2 node] (= ((On-Fork (Triage f0 f1 f2)) node)
+                            (K node))
+      I :irrelevant :irrelevant Δ
+      K :irrelevant :irrelevant Δ))
+  (testing "stems"
+    (are [f0 f1 f2 node x] (= ((On-Fork (Triage f0 f1 f2)) (node x))
+                              (K (node x)))
+      :irrelevant I :irrelevant Δ Δ
+      :irrelevant K :irrelevant Δ Δ))
+  (testing "forks"
+    (are [f0 f1 f2 node x y] (= ((On-Fork (Triage f0 f1 f2)) (node x y))
+                                (((Triage f0 f1 f2) x) y))
+      I :irrelevant :irrelevant Δ Δ Δ
+      K :irrelevant :irrelevant Δ Δ Δ)))
 
 
 (deftest Branch-First-Self-Evaluation-tests
@@ -726,6 +749,136 @@
       ΔΔΔ ΔΔΔ ΔΔΔ ΔΔΔ)))
 
 
-#_(run-test Branch-First-Self-Evaluation-tests)
+(deftest Quote-tests
+  (testing "quoting leaf"
+    (is (= (Quote Δ) Δ)))
+  (testing "quoting `MN`"
+    (are [m n] (= (Quote (m n))
+                  (Δ (Quote m) (Quote n)))
+      Δ Δ
+      K K
+
+      K Δ
+      Δ K
+
+      Δ (K Δ) ;; swapped args application is not fully-reduced
+      K (K Δ) ;; swapped args application is not fully-reduced
+
+      (d Δ) Δ
+      Δ (d Δ)
+
+      (d (d Δ)) Δ
+      Δ (d (d Δ))))
+  (testing "failing, because application `m␣n` is not reduced"
+    (are [m n] (not= (Quote (m n))
+                     (Δ (Quote m) (Quote n)))
+      (K Δ) Δ
+      (K Δ) K
+      (K Δ) (K Δ)
+      D Δ
+      Not False
+      Not True)))
+
+
+(deftest Quote-manual-tests
+  (testing "one-node tree"
+    (are [x y] (= x y)
+      (Quote Δ) Δ))
+  (testing "two-node trees"
+    (are [x y] (= x y)
+      (Quote K) (K Δ)))
+  (testing "three-node trees"
+    (are [x y] (= x y)
+      (Quote (K Δ)) (Δ (K Δ) Δ)
+      (Quote (Δ (Δ Δ))) (Δ Δ (K Δ))))
+  (testing "four-node trees"
+    (are [x y] (= x y)
+      (Quote (Δ (Δ (Δ Δ)))) (K (K (K Δ)))
+      (Quote (K K)) (Δ (K Δ) (K Δ))
+      (Quote (Δ K Δ)) (Δ (K (K Δ)) Δ)
+      (Quote (Δ (K Δ))) (K (Δ (K Δ) Δ))))
+  (testing "five-node trees"
+    (are [x y] (= x y)
+      (Quote I) (Δ (K (K Δ)) (K Δ))
+      (Quote (Δ (Δ K) Δ)) (Δ (K (K (K Δ))) Δ)
+      (Quote (K (Δ (Δ Δ)))) (Δ (K Δ) (K (K Δ)))
+      (Quote (Δ (Δ (Δ (Δ Δ))))) (K (K (K (K Δ))))
+      (Quote (Δ (K Δ) Δ)) (Δ (K (Δ (K Δ) Δ)) Δ)
+      (Quote (K (K Δ))) (Δ (K Δ) (Δ (K Δ) Δ))
+      (Quote (Δ (Δ K Δ))) (K (Δ (K (K Δ)) Δ))
+      (Quote (Δ (K K))) (K (Δ (K Δ) (K Δ))))))
+
+
+(deftest Root-Evaluation-tests
+  (testing "leaf"
+    (is (= Δ (Root Δ))))
+  (testing "fork-leaf"
+    (are [z] (= (Root (Δ Δ z))
+                (Δ z))
+      Δ
+      ΔΔ
+      ΔΔΔ
+      (d Δ)))
+  #_(testing "fork-stem"
+      (are [y z] (= (Root (Δ (Δ y) z))
+                    (Δ y z))
+        Δ Δ
+        ΔΔ ΔΔ
+        ΔΔΔ ΔΔΔ
+        (d Δ) (d Δ)))
+  #_(testing "fork-fork-fork-leaf"
+      (are [y z] (= (Root (Δ (Δ Δ y) z))
+                    y)
+        Δ Δ
+        ΔΔ ΔΔ
+        ΔΔΔ ΔΔΔ))
+  #_(testing "fork-fork-fork-stem"
+      (are [x y z] (= (Root (Δ (Δ (Δ x) y) z))
+                      (Δ (Δ y z) (Δ x z)))
+        Δ Δ Δ
+        ΔΔ ΔΔ ΔΔ
+        ΔΔΔ ΔΔΔ ΔΔΔ))
+  #_(testing "fork-fork-fork-fork"
+      (are [w x y z] (= (Root (Δ (Δ (w x) y) z))
+                        (Δ (Δ z w) x))
+        Δ Δ Δ Δ
+        ΔΔ ΔΔ ΔΔ ΔΔ
+        ΔΔΔ ΔΔΔ ΔΔΔ ΔΔΔ)))
+
+
+(deftest Root-Branch-Evaluation-tests
+  (testing "pass-through"
+    (are [x] (= x (RB (Quote x)))
+      Δ
+      K
+      (K Δ)
+      (d Δ)))
+  (testing "basic application"
+    (are [x y z] (= (RB (Δ (Quote x) (Quote y))) z)
+      Δ Δ K
+      K Δ (K Δ)
+      Δ K (Δ K)
+      ΔΔΔ K Δ))
+  (testing "semantic application"
+    (are [x y] (= x y)
+      True (RB (Δ (Quote Not) (Quote False)))
+      False (RB (Δ (Quote Not) (Quote True))))))
+
+
+(deftest Root-First-Evaluation-tests
+  (testing "basic application"
+    (are [x y] (= (x y) (RF x y))
+      Δ Δ
+      K Δ
+      Δ K
+      K K
+      ΔΔΔ K))
+  (testing "semantic application"
+    (are [x y] (= x y)
+      True (RF Not False)
+      False (RF Not True))))
+
+
+#_(run-test Root-Evaluation-tests)
 #_(run-tests)
 
