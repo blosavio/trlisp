@@ -809,6 +809,8 @@
       (Quote (Δ (K K))) (K (Δ (K Δ) (K Δ))))))
 
 
+;; Not confident that the following `Root` tests are correct and/or sufficient.
+
 (deftest Root-Evaluation-tests
   (testing "leaf"
     (is (= Δ (Root Δ))))
@@ -819,31 +821,33 @@
       ΔΔ
       ΔΔΔ
       (d Δ)))
-  #_(testing "fork-stem"
-      (are [y z] (= (Root (Δ (Δ y) z))
-                    (Δ y z))
-        Δ Δ
-        ΔΔ ΔΔ
-        ΔΔΔ ΔΔΔ
-        (d Δ) (d Δ)))
-  #_(testing "fork-fork-fork-leaf"
-      (are [y z] (= (Root (Δ (Δ Δ y) z))
-                    y)
-        Δ Δ
-        ΔΔ ΔΔ
-        ΔΔΔ ΔΔΔ))
-  #_(testing "fork-fork-fork-stem"
-      (are [x y z] (= (Root (Δ (Δ (Δ x) y) z))
-                      (Δ (Δ y z) (Δ x z)))
-        Δ Δ Δ
-        ΔΔ ΔΔ ΔΔ
-        ΔΔΔ ΔΔΔ ΔΔΔ))
-  #_(testing "fork-fork-fork-fork"
-      (are [w x y z] (= (Root (Δ (Δ (w x) y) z))
-                        (Δ (Δ z w) x))
-        Δ Δ Δ Δ
-        ΔΔ ΔΔ ΔΔ ΔΔ
-        ΔΔΔ ΔΔΔ ΔΔΔ ΔΔΔ)))
+  (testing "fork-stem"
+    (are [y z] (= (Root (Δ (Quote (Δ y)) (Quote z)))
+                  (Δ (Quote y) (Quote z)))
+      Δ Δ
+      ΔΔ ΔΔ
+      ΔΔΔ ΔΔΔ
+      (d Δ) (d Δ)))
+  (testing "fork-fork-fork-leaf"
+    (are [y z] (= (Root (Δ (Quote (Δ Δ y)) (Quote z)))
+                  y)
+      Δ Δ
+      ΔΔ ΔΔ
+      ΔΔΔ ΔΔΔ))
+  (testing "fork-fork-fork-stem"
+    (are [x y z] (= (Root (Δ (Δ (Quote (Δ x)) (Quote y)) (Quote z)))
+                    ((y z) (x z)))
+      K Δ Δ
+      K K Δ
+      K K K
+      (K Δ) (K Δ) (K Δ)
+      (K (K Δ)) (K (K Δ)) (K (K Δ))))
+  (testing "fork-fork-fork-fork"
+    (are [w x y z] (= (Root (Δ (Quote (Δ (Δ w x) y)) (Quote z)))
+                      (z w x))
+      Δ  Δ  Δ  Δ
+      ΔΔ ΔΔ ΔΔ ΔΔ
+      Δ Δ ΔΔΔ ΔΔΔ)))
 
 
 (deftest Root-Branch-Evaluation-tests
