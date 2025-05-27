@@ -122,7 +122,7 @@
     (is (thrown? Exception (appli (Δ (fn foo [_] ()) :bar) :baz)))))
 
 
-(deftest mutl-appli-tests
+(deftest mult-appli-tests
   (are [x y] (= x y)
     Δ   (mult-appli Δ)
     ΔΔ  (mult-appli Δ Δ)
