@@ -1,6 +1,6 @@
 (defproject trlisp "0-SNAPSHOT0"
-  :description "An experimental, Clojure-flavored Lisp dialect using B. Jay's
- unlabelled binary tree calculus as an evaluation model."
+  :description "A Lisp-y implementation of B. Jay's unlabelled binary tree
+ calculus."
   :url "https://github.com/blosavio/trlisp"
   :license {:name "MIT License"
             :url "https://opensource.org/license/mit"
@@ -21,6 +21,6 @@
           :output-path "doc"
           :doc-files []
           :source-uri "https://github.com/blosavio/trlisp/blob/main/{filepath}#L{line}"
-          :html {:transforms [[:div.sidebar.primary] [:append [:ul.index-link [:li.depth-1 [:a {:href "https://github.com/blosavio/trisp"} "Project home"]]]]]}
+          :html {:transforms [[:div.sidebar.primary] [:append [:ul.index-link [:li.depth-1 [:a {:href "https://github.com/blosavio/trlisp"} "Project home"]]]]]}
           :project {:name "trlisp" :version "version 0"}}
   :scm {:name "git" :url "https://github.com/blosavio/trlisp"})

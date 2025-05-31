@@ -39,12 +39,12 @@
     (fork? (Δ :a :b))))
 
 
-(deftest appli-tests
+(deftest Apply-tests
   (testing "fn"
-    (appli #(if % :correct) :foo)
-    (appli (appli (appli K #(if % :correct)) nil) :foo))
+    (Apply #(if % :correct) :foo)
+    (Apply (Apply (Apply K #(if % :correct)) nil) :foo))
   (testing "Rule 0a"
-    (let [Rule0a (fn [a] (appli Δ a))
+    (let [Rule0a (fn [a] (Apply Δ a))
           A0 Δ
           A1 ΔΔ
           A2 ΔΔΔ]
@@ -53,7 +53,7 @@
         (Δ A1) (Rule0a A1) (Δ ΔΔ)
         (Δ A2) (Rule0a A2) (Δ ΔΔΔ))))
   (testing "Rule 0b"
-    (let [Rule0b (fn [a b] (appli (Δ a) b))
+    (let [Rule0b (fn [a b] (Apply (Δ a) b))
           A0 Δ      B0 Δ
           A1 Δ      B1 ΔΔ
           A2 Δ      B2 ΔΔΔ]
@@ -62,7 +62,7 @@
         (Δ A1 B1) (Rule0b A1 B1) (Δ Δ ΔΔ)
         (Δ A2 B2) (Rule0b A2 B2) (Δ Δ ΔΔΔ))))
   (testing "Leaf Rule"
-    (let [LeafRule (fn [a b] (appli (Δ Δ a) b))
+    (let [LeafRule (fn [a b] (Apply (Δ Δ a) b))
           A0 Δ
           B0 :irrelevant
 
@@ -76,7 +76,7 @@
         A1 (LeafRule A1 B1) ΔΔ
         A2 (LeafRule A2 B2) ΔΔΔ)))
   (testing "Stem Rule"
-    (let [StemRule (fn [a b c] (appli (Δ (Δ  a) b) c))
+    (let [StemRule (fn [a b c] (Apply (Δ (Δ  a) b) c))
           A0 Δ
           B0 Δ
           C0 Δ
@@ -93,7 +93,7 @@
         ((A1 C1) (B1 C1)) (StemRule A1 B1 C1) ΔΔ
         ((A2 C2) (B2 C2)) (StemRule A2 B2 C2) ΔΔ)))
   (testing "Fork Rule"
-    (let [ForkRule (fn [a b c d] (appli (Δ (Δ a b) c) d))
+    (let [ForkRule (fn [a b c d] (Apply (Δ (Δ a b) c) d))
           W0 Δ
           X0 Δ
           Y0 :irrelevant
@@ -119,17 +119,17 @@
         ((Z2 W2) X2) (ForkRule W2 X2 Y2 Z2) ΔΔΔ
         ((Z3 W3) X3) (ForkRule W3 X3 Y3 Z3) True)))
   (testing "non-tree left child value"
-    (is (thrown? Exception (appli (Δ (fn foo [_] ()) :bar) :baz)))))
+    (is (thrown? Exception (Apply (Δ (fn foo [_] ()) :bar) :baz)))))
 
 
-(deftest mult-appli-tests
+(deftest Mult-Apply-tests
   (are [x y] (= x y)
-    Δ   (mult-appli Δ)
-    ΔΔ  (mult-appli Δ Δ)
-    ΔΔΔ (mult-appli Δ Δ Δ)
-    Δ   (mult-appli Δ Δ Δ Δ)
-    ΔΔ  (mult-appli Δ Δ Δ Δ Δ)
-    ΔΔΔ (mult-appli Δ Δ Δ Δ Δ Δ)))
+    Δ   (Mult-Apply Δ)
+    ΔΔ  (Mult-Apply Δ Δ)
+    ΔΔΔ (Mult-Apply Δ Δ Δ)
+    Δ   (Mult-Apply Δ Δ Δ Δ)
+    ΔΔ  (Mult-Apply Δ Δ Δ Δ Δ)
+    ΔΔΔ (Mult-Apply Δ Δ Δ Δ Δ Δ)))
 
 
 (deftest K-tests
@@ -291,8 +291,8 @@
     False ((Wait-1 And) False False)))
 
 
-(deftest Self-apply-tests
-  (are [x] (= (x x) (Self-apply x))
+(deftest Self-Apply-tests
+  (are [x] (= (x x) (Self-Apply x))
     Δ
     ΔΔ
     ΔΔΔ))
@@ -324,6 +324,7 @@
     3 1
     3 1
     3 3))
+
 
 (deftest Minus-tests
   (are [a b] (= (- a b)
@@ -387,20 +388,20 @@
                         (nat->tree 2)
                         (nat->tree 3))]
     (are [x y] (= x y)
-      1 (tree->nat (t-head test-List))
-      [2 3] (map tree->nat (List->seq (t-tail test-List))))))
+      1 (tree->nat (T-Head test-List))
+      [2 3] (map tree->nat (List->seq (T-Tail test-List))))))
 
 
-(deftest t-cons-tests
+(deftest T-Cons-tests
   (are [x y] (= x y)
     (List :a :b :c :d)
-    (t-cons :a (List :b :c :d))))
+    (T-Cons :a (List :b :c :d))))
 
 
 (deftest List-Map-tests
   (testing "empty lists"
     (are [x y] (= x y)
-      t-nil (List-Map Successor t-nil)
+      T-Nil (List-Map Successor T-Nil)
       Δ (List-Map Successor (List))))
   (testing "non-emtpy lists"
     (are [x y z] (= (map tree->nat (List->seq (List-Map y x))) z)

@@ -8,32 +8,38 @@
   This [Hacker News post](https://news.ycombinator.com/item?id=42373437)
   has many useful comments, as is Timur Latypoff's
   [visualization](https://latypoff.com/tree-calculus-visualized/)."
-  (:require [thingy.core :refer [assign-thingy-fn!
+  (:require [tree-calculus.definers :refer :all]
+            [thingy.core :refer [assign-thingy-fn!
                                  make-thingy]]))
 
 
-(defn length-is? [n] #(= n (count %)))
+(load-file "src/tree_calculus/docstrings.clj")
 
 
-(def leaf? (length-is? 0))
-(def stem? (length-is? 1))
-(def fork? (length-is? 2))
+(Defn length-is? [n] #(= n (count %)))
 
 
-(defn appli-sentinel
+(Def leaf? (length-is? 0))
+(Def stem? (length-is? 1))
+(Def fork? (length-is? 2))
+
+
+(defn Apply-Sentinel
+  {:UUIDv4 #uuid "88a2dfed-f333-46d8-a671-1fcdec34edc3"
+   :no-doc true}
   [val]
-  {:UUIDv4 #uuid "88a2dfed-f333-46d8-a671-1fcdec34edc3"}
-  (throw (Exception. (str *ns* "/appli: Non-tree in the left child node of the
+  (throw (Exception. (str *ns* "/Apply: Non-tree in the left child node of the
  first argument. This value should be Δ or some derivative. Actual value: " val))))
 
 
-(defn appli
+(defn Apply
   "Apply tree left-hand tree `L` to right-hand tree `R`. `L` and `R` are
   \"alternate function invoke\" vectors, which, when at the head of an evaluated
   S-expression, invoke a custom function.
 
   Following reductions listed at Barry Jay's [Reflective Programs in Tree
-  Calculus](https://github.com/barry-jay-personal/tree-calculus/blob/master/tree_book.pdf) (2021, pages 5 and 28).
+  Calculus](https://github.com/barry-jay-personal/tree-calculus/blob/master/tree_book.pdf)
+  (2021, pages 5 and 28).
 
   Rules:
 
@@ -60,31 +66,31 @@
   `plus`, contain an anonymous function, that requires handling before
   dispatching on node kind."
 
-                          "The recursive calls to `appli` are not strictly
+                          "The recursive calls to `Apply` are not strictly
   necessary. The explicit calls avoid delegation to the `.invoke()` method,
-  which ultimately passes back to `appli`."]}
+  which ultimately passes back to `Apply`."]}
   [L R]
   (cond
     (fn? L) (L R)
     (leaf? L) (make-thingy R)
     (stem? L) (make-thingy (first L) R)
     (fork? L) (cond
-                (fn? (first L)) (appli-sentinel (first L))
+                (fn? (first L)) (Apply-Sentinel (first L))
                 (leaf? (first L)) (second L)
-                (stem? (first L)) (appli (appli (second L) R)
-                                         (appli (ffirst L) R))
-                (fork? (first L)) (appli (appli R (ffirst L))
+                (stem? (first L)) (Apply (Apply (second L) R)
+                                         (Apply (ffirst L) R))
+                (fork? (first L)) (Apply (Apply R (ffirst L))
                                          (second (first L))))))
 
 
-(defn mult-appli
-  "For all thingys, applies `appli` until `args` exhausted."
+(defn Mult-Apply
+  "For all thingys, applies `Apply` until `args` exhausted."
   {:UUIDv4 #uuid "4912473b-de66-4f77-b786-5d31fec37091"}
   [& args]
-  (reduce appli args))
+  (reduce Apply args))
 
 
-(assign-thingy-fn! mult-appli)
+(assign-thingy-fn! Mult-Apply)
 
 
 (def Δ (make-thingy))
@@ -92,70 +98,93 @@
 
 ;; combinators
 
-(def K (Δ Δ))
 
-(def I (Δ (Δ Δ)
+(Def K (Δ Δ))
+
+
+(Def I (Δ (Δ Δ)
           (Δ Δ)))
 
-(def D (Δ (Δ Δ)
+
+(Def D (Δ (Δ Δ)
           (Δ Δ Δ)))
 
-;; D immediately reduces
-;; convenient shortcut (pg. 29)
-(defn d [x] (Δ (Δ x)))
 
-(def S ((d (K D))
+(Defn d [x] (Δ (Δ x)))
+
+
+(Def S ((d (K D))
         ((d K) (K D))))
 
-(def B (S (K S) K))
 
-(def C (S (S (K (S (K S) K)) S) (K K)))
+(Def B (S (K S) K))
 
-(def W (S S (S K)))
 
-(def True K)
+(Def C (S (S (K (S (K S) K)) S) (K K)))
 
-(def False (K I))
 
-(def And (d (K (K I))))
+(Def W (S S (S K)))
 
-(def Or ((d (K K)) I))
 
-(def Implies (d (K K)))
+(Def True K)
 
-(def Not ((d (K K))
+
+(Def False (K I))
+
+
+(Def And (d (K (K I))))
+
+
+(Def Or ((d (K K)) I))
+
+
+(Def Implies (d (K K)))
+
+
+(Def Not ((d (K K))
           ((d (K (K I))) I)))
 
-(def Iff (Δ (Δ I Not) Δ))
 
-(def Zero? ((d (K (K (K (K I)))))
+(Def Iff (Δ (Δ I Not) Δ))
+
+
+(Def Zero? ((d (K (K (K (K I)))))
             ((d (K K)) Δ)))
 
-(defn Pair [x y] (Δ x y))
 
-(defn First [pair] (((Δ pair) Δ) K))
+(Defn Pair [x y] (Δ x y))
 
-(defn Second [pair] (((Δ pair) Δ) (K I)))
 
-(def Successor K)
+(Defn First [pair] (((Δ pair) Δ) K))
 
-(def Predecessor ((d (K (K I)))
+
+(Defn Second [pair] (((Δ pair) Δ) (K I)))
+
+
+(Def Successor K)
+
+
+(Def Predecessor ((d (K (K I)))
                   ((d (K Δ)) Δ)))
 
-(defn Query [is0 is1 is2] ((d (K is1))
+
+(Defn Query [is0 is1 is2] ((d (K is1))
                            ((d (K (K I)))
                             ((d (K (K (K (K (K is2))))))
                              ((d (K (K (K is0))))
                               Δ)))))
 
-(def Leaf? (Query True False False))
-(def Stem? (Query False True False))
-(def Fork? (Query False False True))
 
-(defn Wait [x y] ((d I)
+(Def Leaf? (Query True False False))
+(Def Stem? (Query False True False))
+(Def Fork? (Query False False True))
+
+
+(Defn Wait [x y] ((d I)
                   ((d (K y)) (K x))))
 
-(defn Wait-1 [x] ((d
+
+(Defn Wait-1 [x] ((d
                    ((d (K (K x)))
                     ((d
                       ((d K)
@@ -163,43 +192,50 @@
                      (K Δ))))
                   (K (d I))))
 
-(defn Wait-2 [x y] ((d
+
+(Defn Wait-2 [x y] ((d
                      (d (K ((d (K y))
                             (K x)))))
                     (((d ((d K)
                           (K Δ))) (K Δ))
                      (K (d I)))))
 
-(def Self-apply ((d I) I))
 
-(defn Z [f] (Wait Self-apply
-                  ((d (Wait-1 Self-apply)) (K f))))
+(Def Self-Apply ((d I) I))
 
-(defn Swap [f] ((d (K f)) ((d ((d K) (K Δ))) (K Δ))))
 
-(defn Y [f] (Z (Swap f)))
+(Defn Z [f] (Wait Self-Apply
+                  ((d (Wait-1 Self-Apply)) (K f))))
 
-(def Plus
+
+(Defn Swap [f] ((d (K f)) ((d ((d K) (K Δ))) (K Δ))))
+
+
+(Defn Y [f] (Z (Swap f)))
+
+
+(Def Plus
   (Y (fn [m]
        (fn [plus]
          ((Δ m I) (K (fn [x]
                        (fn [n] (Successor (plus x n))))))))))
 
-(def Minus
+
+(Def Minus
   (Y (fn [m]
        (fn [minus]
          (fn [n]
            ((Δ n m) (K (minus (Predecessor m)))))))))
 
 
-(def Times
+(Def Times
   (Y (fn [m]
        (fn [times]
          (fn [n]
            ((Δ n Δ) (K (fn [x] ((Plus m) ((times m) x))))))))))
 
 
-(def Divide
+(Def Divide
   (fn [m' n']
     ((Y
       (fn [m]
@@ -226,26 +262,32 @@
   (List b0 b1 b2 b3 b4 b5 b6 b7))
 
 
-(def t-nil Δ)
+(Def T-Nil Δ)
 
-(defn t-cons [h t] (Δ h t))
 
-(def t-head (fn [xs] (((Δ xs) (K I)) K)))
+(Defn T-Cons [h t] (Δ h t))
 
-(def t-tail (fn [xs] (((Δ xs) (K I)) (K I))))
 
-(def List-Map-Swap
+(Def T-Head (fn [xs] (((Δ xs) (K I)) K)))
+
+
+(Def T-Tail (fn [xs] (((Δ xs) (K I)) (K I))))
+
+
+(Def List-Map-Swap
   (fn [x] (Δ x
-             (K (K t-nil))
+             (K (K T-Nil))
              (fn [h]
                (fn [t]
                  (fn [m]
                    (fn [f]
-                     (t-cons (f h) (m t f)))))))))
+                     (T-Cons (f h) (m t f)))))))))
 
-(def List-Map (Swap (Y List-Map-Swap)))
 
-(def List-FoldLeftAux (fn [y] (Δ y (K (K I))
+(Def List-Map (Swap (Y List-Map-Swap)))
+
+
+(Def List-FoldLeftAux (fn [y] (Δ y (K (K I))
                                  (fn [h]
                                    (fn [t]
                                      (fn [lfold]
@@ -253,9 +295,11 @@
                                          (fn [x]
                                            (lfold t f (f x h))))))))))
 
-(defn List-FoldLeft [f x y] ((Y List-FoldLeftAux) y f x))
 
-(def List-FoldRightAux (fn [y] (Δ y (K (K I))
+(Defn List-FoldLeft [f x y] ((Y List-FoldLeftAux) y f x))
+
+
+(Def List-FoldRightAux (fn [y] (Δ y (K (K I))
                                   (fn [h]
                                     (fn [t]
                                       (fn [rfold]
@@ -264,15 +308,18 @@
                                             (f h (rfold t f x))))))))))
 
 
-(defn List-FoldRight [f x y] ((Y List-FoldRightAux) y f x))
+(Defn List-FoldRight [f x y] ((Y List-FoldRightAux) y f x))
 
-(defn List-Append [xs ys] (List-FoldRight (fn [h t] (t-cons h t))
+
+(Defn List-Append [xs ys] (List-FoldRight (fn [h t] (T-Cons h t))
                                           ys
                                           xs))
 
-(defn List-Reverse [z] (List-FoldLeft (fn [x y] (t-cons y x)) t-nil z))
 
-(def Size (Y (fn [x] ((Stem? x)
+(Defn List-Reverse [z] (List-FoldLeft (fn [x y] (T-Cons y x)) T-Nil z))
+
+
+(Def Size (Y (fn [x] ((Stem? x)
                       (fn [s] (Δ
                                (x Δ)
                                Δ
@@ -286,7 +333,8 @@
                              (Successor
                               (Plus (s x1) (s x2)))))))))))
 
-(def Equal? (Y (fn [x] ((Stem? x)
+
+(Def Equal? (Y (fn [x] ((Stem? x)
                         (fn [e]
                           (fn [y]
                             ((Stem? y)
@@ -309,47 +357,60 @@
                                        (e x1 y1 (e x2 y2) (K I)))))
                                   (K I)))))))))))
 
-(defn Tag [t f] ((d t) ((d f) (K K))))
 
-(def Get-Tag (fn [p] (First ((First p) Δ))))
+(Defn Tag [t f] ((d t) ((d f) (K K))))
 
-(def Un-Tag (fn [x] (First ((First (Second x)) Δ))))
 
-(defn Tag-Wait [t] (fn [w] (Tag t (Wait Self-apply w))))
+(Def Get-Tag (fn [p] (First ((First p) Δ))))
 
-(defn Y-t [t f] (Tag t (Wait Self-apply ((d (Tag-Wait t)) (K (Swap f))))))
 
-(def error Δ)
+(Def Un-Tag (fn [x] (First ((First (Second x)) Δ))))
 
-(defn Type-Check [x u] ((Fork? x)
+
+(Defn Tag-Wait [t] (fn [w] (Tag t (Wait Self-Apply w))))
+
+
+(Defn Y-t [t f] (Tag t (Wait Self-Apply ((d (Tag-Wait t)) (K (Swap f))))))
+
+
+(Def error Δ)
+
+
+(Defn Type-Check [x u] ((Fork? x)
                         (Δ x Δ
                            (fn [t]
                              (fn [v]
                                (Equal? u v t error))))
                         error))
 
-(defn Typed-App [f x] (Tag (Type-Check (Get-Tag f)
+
+(Defn Typed-App [f x] (Tag (Type-Check (Get-Tag f)
                                        (Get-Tag x))
                            ((Un-Tag f)
                             (Un-Tag x))))
 
-(def Stem?-2 (fn [z] (Δ z Δ (K (K Δ)))))
 
-(def Fork?-2 (fn [z] (Δ z (K K) (K (K Δ)))))
+(Def Stem?-2 (fn [z] (Δ z Δ (K (K Δ)))))
 
-(defn Triage [f0 f1 f2]
+
+(Def Fork?-2 (fn [z] (Δ z (K K) (K (K Δ)))))
+
+
+(Defn Triage [f0 f1 f2]
   (fn [a] ((Stem? a)
            (Δ (a Δ) Δ (fn [x] (K (f1 x))))
            (Δ a f0 f2))))
 
-(def Size-Variant (Y (Triage (K (K Δ))
+
+(Def Size-Variant (Y (Triage (K (K Δ))
                              (fn [y]
                                (fn [s] (K (s y))))
                              (fn [y]
                                (fn [z]
                                  (fn [s] (K (Plus (s y) (s z)))))))))
 
-(def Equal?-Variant
+
+(Def Equal?-Variant
   (Y (Triage
       (fn [e]
         (Triage True
@@ -369,11 +430,13 @@
                       (fn [z2]
                         (e y1 z1 (e y2 z2) False))))))))))
 
-(defn Leaf-Case [s] (fn [r]
+
+(Defn Leaf-Case [s] (fn [r]
                       (fn [x]
                         ((Leaf? x) s (r x)))))
 
-(defn Stem-Case [f] (fn [r]
+
+(Defn Stem-Case [f] (fn [r]
                       (fn [x] ((Stem? x)
                                (Δ (x Δ) Δ
                                   (fn [y]
@@ -383,16 +446,19 @@
                                         y))))
                                (r x)))))
 
-(def Fork-Case-Aux-1 (fn [x1]
+
+(Def Fork-Case-Aux-1 (fn [x1]
                        (fn [x2]
                          (fn [r1]
                            (r1 (Δ x1 x2))))))
 
-(defn Fork-Case-Aux-2 [p1] (fn [x2]
+
+(Defn Fork-Case-Aux-2 [p1] (fn [x2]
                              (fn [r2]
                                (r2 (Δ p1 x2)))))
 
-(defn Fork-Case [f] (fn [r]
+
+(Defn Fork-Case [f] (fn [r]
                       (fn [x]
                         ((Fork? x)
                          (Δ x Δ
@@ -402,7 +468,8 @@
                                  x1 x2 r))))
                          (r x)))))
 
-(defn Tree-Case [p s]
+
+(Defn Tree-Case [p s]
   (fn [r]
     (fn [x]
       (((cond
@@ -416,9 +483,11 @@
                                       (Fork-Case-Aux-2 (First p))))))
         r) x))))
 
-(defn Extension [p s r] (Wait (Tree-Case p s) r))
 
-(defn Tree-Case-2 [p s]
+(Defn Extension [p s r] (Wait (Tree-Case p s) r))
+
+
+(Defn Tree-Case-2 [p s]
   (fn [r]
     (fn [x]
       ((((Equal? p x)
@@ -434,22 +503,28 @@
                              (Fork-Case-Aux-2 (First p))))))))
         r) x))))
 
-(defn Extension-2 [p s r] (Wait (Tree-Case-2 p s) r))
 
-(def Eager (fn [z]
+(Defn Extension-2 [p s r] (Wait (Tree-Case-2 p s) r))
+
+
+(Def Eager (fn [z]
              (fn [f]
                (Δ z I (K (K I)) I f z))))
 
-(defn Db [x] ((d ((d (K x)) I)) (K D)))
 
-(def BF-Leaf (fn [y] (K (K y))))
+(Defn Db [x] ((d ((d (K x)) I)) (K D)))
 
-(defn BF-Stem [e] (fn [x]
+
+(Def BF-Leaf (fn [y] (K (K y))))
+
+
+(Defn BF-Stem [e] (fn [x]
                     (fn [y]
                       ((d ((d (K (K e))) (Db x)))
                        ((d ((d K) (Db y))) (K D))))))
 
-(def BF-Fork (fn [w]
+
+(Def BF-Fork (fn [w]
                (fn [x]
                  (K ((d
                       ((d K)
@@ -457,15 +532,18 @@
                         (K D))))
                      (K (d (K x))))))))
 
-(defn On-Fork [f] (fn [x] (Δ (Fork?-2 x) (Δ x Δ f) (K (K (K x))))))
 
-(def BF (Y
+(Defn On-Fork [f] (fn [x] (Δ (Fork?-2 x) (Δ x Δ f) (K (K (K x))))))
+
+
+(Def BF (Y
          (On-Fork
           (Triage BF-Leaf
                   (BF-Stem Eager)
                   BF-Fork))))
 
-(def Quote-Aux
+
+(Def Quote-Aux
   (fn [x]
     ((Stem? x)
      (fn [q]
@@ -476,27 +554,32 @@
                     (fn [q]
                       (Δ (K (q x1)) (q x2)))))))))
 
-(def Quote (Y Quote-Aux))
 
-(def Root-L (fn [r]
+(Def Quote (Y Quote-Aux))
+
+
+(Def Root-L (fn [r]
               (fn [y]
                 (fn [z]
                   (r y)))))
 
-(def Root-S (fn [x]
+
+(Def Root-S (fn [x]
               (fn [r]
                 (fn [y]
                   (fn [z]
                     (r (Δ (Δ y z) (Δ x z))))))))
 
-(def Root-F (fn [w]
+
+(Def Root-F (fn [w]
               (fn [x]
                 (fn [r]
                   (fn [y]
                     (fn [z]
                       (r (Δ (Δ z w) x))))))))
 
-(def Root-N (fn [t]
+
+(Def Root-N (fn [t]
               (fn [y]
                 (fn [r]
                   ((((Triage Root-L
@@ -504,14 +587,17 @@
                              Root-F)
                      (r t)) r) y)))))
 
-(def Root-Aux (fn [a]
+
+(Def Root-Aux (fn [a]
                 (fn [r]
                   (Δ a Δ (fn [f]
                            (((On-Fork Root-N) (r f)) r))))))
 
-(def Root (Y Root-Aux))
 
-(def RB-Aux (fn [x]
+(Def Root (Y Root-Aux))
+
+
+(Def RB-Aux (fn [x]
               (fn [r]
                 ((Triage Δ
                          (fn [y] (Δ (r y)))
@@ -520,7 +606,9 @@
                              (Δ (r y) (r z)))))
                  (Root x)))))
 
-(def RB (Y RB-Aux))
 
-(defn RF [f z] (RB (Δ (Quote f) (Quote z))))
+(Def RB (Y RB-Aux))
+
+
+(Defn RF [f z] (RB (Δ (Quote f) (Quote z))))
 
