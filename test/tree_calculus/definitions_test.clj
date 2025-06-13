@@ -398,13 +398,13 @@
     (T-Cons :a (List :b :c :d))))
 
 
-(deftest List-Map-tests
+(deftest Map-tests
   (testing "empty lists"
     (are [x y] (= x y)
-      T-Nil (List-Map Successor T-Nil)
-      Δ (List-Map Successor (List))))
+      T-Nil (Map Successor T-Nil)
+      Δ (Map Successor (List))))
   (testing "non-emtpy lists"
-    (are [x y z] (= (map tree->nat (List->seq (List-Map y x))) z)
+    (are [x y z] (= (map tree->nat (List->seq (Map y x))) z)
       (List (nat->tree 99))
       I
       [99]
@@ -416,51 +416,51 @@
       [2 3 4])))
 
 
-(deftest List-FoldLeft-tests
+(deftest Fold-Left-tests
   (are [x y] (= x y)
     10
-    (tree->nat (List-FoldLeft Plus (nat->tree 1) (List (nat->tree 2)
-                                                       (nat->tree 3)
-                                                       (nat->tree 4))))
+    (tree->nat (Fold-Left Plus (nat->tree 1) (List (nat->tree 2)
+                                                   (nat->tree 3)
+                                                   (nat->tree 4))))
 
     3
-    (tree->nat (List-FoldLeft Divide (nat->tree 30) (List (nat->tree 2)
-                                                          (nat->tree 5))))
+    (tree->nat (Fold-Left Divide (nat->tree 30) (List (nat->tree 2)
+                                                      (nat->tree 5))))
 
     5
-    (tree->nat (List-FoldLeft Divide (nat->tree 60) (List (nat->tree 3)
-                                                          (nat->tree 4))))
+    (tree->nat (Fold-Left Divide (nat->tree 60) (List (nat->tree 3)
+                                                      (nat->tree 4))))
 
     True
-    (List-FoldLeft And True (List True True True))))
+    (Fold-Left And True (List True True True))))
 
 
-(deftest List-FoldRight-tests
+(deftest Fold-Right-tests
   (are [x y] (= x y)
     99
-    (tree->nat (List-FoldRight Plus (nat->tree 99) (List)))
+    (tree->nat (Fold-Right Plus (nat->tree 99) (List)))
 
     2
-    (tree->nat (List-FoldRight Divide (nat->tree 1) (List (nat->tree 60)
-                                                          (nat->tree 120)
-                                                          (nat->tree 4))))
+    (tree->nat (Fold-Right Divide (nat->tree 1) (List (nat->tree 60)
+                                                      (nat->tree 120)
+                                                      (nat->tree 4))))
 
     True
-    (List-FoldRight And True (List True True True))))
+    (Fold-Right And True (List True True True))))
 
 
-(deftest List-Append-tests
+(deftest Append-tests
   (are [x y] (= x y)
-    (List) (List-Append (List) (List))
-    (List :a :b :c) (List-Append (List :a :b :c) (List))
-    (List :a :b :c) (List-Append (List) (List :a :b :c))
-    (List :a :b :c :d) (List-Append (List :a :b) (List :c :d))))
+    (List) (Append (List) (List))
+    (List :a :b :c) (Append (List :a :b :c) (List))
+    (List :a :b :c) (Append (List) (List :a :b :c))
+    (List :a :b :c :d) (Append (List :a :b) (List :c :d))))
 
 
-(deftest List-Reverse-tests
+(deftest Reverse-tests
   (are [x y] (= x y)
-    (List) (List-Reverse (List))
-    (List :c :b :a) (List-Reverse (List :a :b :c))))
+    (List) (Reverse (List))
+    (List :c :b :a) (Reverse (List :a :b :c))))
 
 
 (deftest Size-tests
@@ -511,7 +511,7 @@
       3 (tree->nat ((Tag False Plus) (nat->tree 1) (nat->tree 2)))
       True ((Tag False And) True True)
       :foo ((Tag False I) :foo)
-      [2 3 4] (map tree->nat (List->seq (List-Map  (Tag False Successor) (List (nat->tree 1) (nat->tree 2) (nat->tree 3))))))))
+      [2 3 4] (map tree->nat (List->seq (Map (Tag False Successor) (List (nat->tree 1) (nat->tree 2) (nat->tree 3))))))))
 
 
 (def Plus-t (Y-t

@@ -2,20 +2,24 @@
   "Helper definitions, mostly for testing and readability, but not fundamental."
   (:require
    [clojure.set :refer [map-invert]]
+   [tree-calculus.definers :refer :all]
    [tree-calculus.definitions :refer :all]))
 
 
-(def ΔΔ (Δ Δ))
+(load-file "src/tree_calculus/docstrings.clj")
 
 
-(def ΔΔΔ (Δ Δ Δ))
+(Def ΔΔ (Δ Δ))
 
 
-(def Anything-to-Not (K Not))
+(Def ΔΔΔ (Δ Δ Δ))
+
+
+(Def Anything-to-Not (K Not))
 
 
 (defn nat->tree
-  "Given natural number `nat`, returns a tree representation.
+  "Given natural number `n`, returns a tree representation.
 
   See also [[tree->nat]]."
   {:UUIDv4 #uuid "b43667f4-70d3-4db3-893e-bc40209dc7fe"}
@@ -26,7 +30,7 @@
 
 
 (defn tree->nat
-  "Given un-labelled binary tree `t`, returns equivalent natural number.
+  "Given unlabelled binary tree `t`, returns equivalent natural number.
 
   See also [[nat->tree]]."
   {:UUIDv4 #uuid "62a54ee5-816e-48ae-8992-e1dac876578a"}
@@ -38,28 +42,12 @@
            (tree->nat (second t) (inc n)))))
 
 
-(def bit->Bit-metadata {:doc "Given a Clojure/Java bit, returns a tree calculus
- Bit.
-
-See also [[Bit->bit]]."
-                        :UUIDv4 #uuid "99d4d42b-6f9e-466c-bf21-ad6cf618fad3"})
-
-
-(def ^bit->Bit-metadata
-  bit->Bit
+(Def bit->Bit
   {2r0 Δ
    2r1 (K Δ)})
 
 
-(def Bit->bit-metadata {:doc "Given a tree calculus Bit, returns a Clojure/Java
- bit.
-
-See also [[bit->Bit]]."
-                        :UUIDv4 #uuid "b8c4b17c-e7bc-4651-9a64-dda4a323a531"})
-
-
-(def ^Bit->bit-metadata
-  Bit->bit
+(Def Bit->bit
   (map-invert bit->Bit))
 
 
@@ -103,7 +91,7 @@ See also [[bit->Bit]]."
 
 
 (defn Bite->Byte
-  "Given a tree calculus Bite, returns a Clojure/Java Byte integer.
+  "Given a tree calculus Bite `B`, returns a Clojure/Java Byte integer.
 
   See also [[Byte->Bite]]."
   {:UUIDv4 #uuid "744bbe71-8699-45e2-8af9-e10ed8e27adb"}

@@ -8,6 +8,18 @@
   (register s :no-doc))
 
 
+(register 'Δ
+          "*Node operator*. Both a value and a function. By itself, equivalent
+ to an empty Clojure vector. When at the head of an evaluated list, behaves as
+ a function, invokes [[Apply]], the tree calculus application rules.
+
+```
+(Δ) ;; => Δ, or equivalently []
+
+(Δ x) ;; returns a stem of x
+(Δ x y) ;; returns a fork of x and y```")
+
+
 (register 'K
           "*K combinator*. When supplied with two arguments, returns the
  first, discarding the second.
@@ -37,7 +49,7 @@ to the first, `x`, of its three arguments always reduces to `(Δ (Δ x))`.
 
 ```(D x y z) ;; => ((Δ (Δ x)) y z)```
 
-is equilvalent to
+is equivalent to
 
 ```((d x) y z)```
 
@@ -288,43 +300,43 @@ See also [[Leaf?]] and [[Stem?]].")
 (register 'List-Map-Swap :no-doc)
 
 
-(register 'List-Map
+(register 'Map
           "Apply a function to each element of a list.
 
-```(List-Map Successor (List x y z)) ;; => (List (Successor x) (Successor y) (Sucessor z))```")
+```(Map Successor (List x y z)) ;; => (List (Successor x) (Successor y) (Successor z))```")
 
 
 (register 'List-FoldLeftAux :no-doc)
 
 
-(register 'List-FoldLeft
+(register 'Fold-Left
           "Apply a function `f` to an initial value `x` and the first element of
  a list `y`, then apply the function to that result and next element of the list, etc.
 
-```(List-FoldLeft Divide sixty (List three four)) ;; => five```")
+```(Fold-Left Divide sixty (List three four)) ;; => five```")
 
 
 (register 'List-FoldRightAux :no-doc)
 
 
-(register 'List-FoldRight
+(register 'Fold-Right
           "Apply function `f` to an initial value `x` and a value obtained by
 applying `f` to the first element of list `y` and the value obtained by applying
 `f` to the second element, etc.
 
-```(List-FoldRight Divide one (List sixty one-hundred-twenty four)) ;; => two```")
+```(Fold-Right Divide one (List sixty one-hundred-twenty four)) ;; => two```")
 
 
-(register 'List-Append
+(register 'Append
           "Append list `xs` to the head of list `ys`.
 
-```(List-Append (List x y z)  (List a b c)) ;; => (List x y z a b c)```")
+```(Append (List x y z)  (List a b c)) ;; => (List x y z a b c)```")
 
 
-(register 'List-Reverse
+(register 'Reverse
           "Reverses list `z`.
 
-```(List-Reverse (List a b c)) ;; => (List c b a)```")
+```(Reverse (List a b c)) ;; => (List c b a)```")
 
 
 (register 'Size
@@ -341,7 +353,7 @@ applying `f` to the first element of list `y` and the value obtained by applying
 
 (register 'Tag
           "Apply a tag `t` to form `f`. The tagged `f` applied to some other
- argument `x` is indistinguishable from un-tagged `f` applied to the same
+ argument `x` is indistinguishable from untagged `f` applied to the same
  argument `x`.
 
 ```((Tag t f) x) ;; => (f x)```
@@ -445,7 +457,7 @@ implemented with [[Triage]].
 
 (register 'Extension
           "*Pattern matching*. Returns a function accepting a single argument
- `x`, that when applied to `x` returns various patterns below. `Extention`
+ `x`, that when applied to `x` returns various patterns below. `Extension`
  requires a pattern `p`, body `s`, and a 'always-applied' functions `r`.
 
 Use when you have a pattern `(Δ :a :b)` and a test `(Δ :c :d)`, and want to ask
@@ -510,9 +522,9 @@ See [[RB]] and [[RF]] for more ergonomic evaluators.")
 
 
 (register 'RB
-          "*Root-Branch self-evaluator*. Performes root evaluation then
+          "*Root-Branch self-evaluator*. Performs root evaluation then
  recursively evaluates the branches to produce a normal form. Consumes a single
-tree, a fork whose branches are each [[Quote]]d.
+ tree, a fork whose branches are each [[Quote]]d.
 
 ```(RB (Δ (Quote Not) (Quote False))) ;; => True```")
 
@@ -521,4 +533,27 @@ tree, a fork whose branches are each [[Quote]]d.
           "*Root-First self-evaluator*. Applies `f` to `z`, quotation implicit.
 
 ```(RF Not False) ;; => True```")
+
+
+(register 'ΔΔ
+          "Stem resulting from evaluating `(Δ Δ)`.")
+
+
+(register 'ΔΔΔ
+          "Fork resulting from evaluating `(Δ Δ Δ)`.")
+
+
+(register 'Anything-to-Not :no-doc)
+
+
+(register 'bit->Bit
+          "Given a Clojure/Java bit, returns a tree calculus Bit.
+
+See also [[Bit->bit]].")
+
+
+(register 'Bit->bit
+          "Given a tree calculus Bit, returns a Clojure/Java bit.
+
+See also [[bit->Bit]].")
 

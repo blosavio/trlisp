@@ -1,0 +1,37 @@
+{:sections [{:section-name "Setup"}
+            {:section-name "API" :section-href "https://blosavio.github.io/trlisp/index.html" :skip-section-load? true}
+            {:section-name "Changelog" :section-href "https://github.com/blosavio/trlisp/blob/main/changelog.md" :skip-section-load? true}
+            {:section-name "Introduction" :section-href "intro"}
+            {:section-name "Usage" :section-href "usage"}
+            {:section-name "Fundamental functions" :section-href "fundamental"}
+            {:section-name "Base functions" :section-href "base"}
+            {:section-name "Comments" :section-href "comments"}
+            {:section-name "References" :section-href "references"}
+            {:section-name "Glossary"}
+            {:section-name "Contact" :section-href "https://github.com/blosavio" :skip-section-load? true}]
+
+ :clojars-badge? true
+ :copyright-holder "Brad Losavio"
+
+ ;; special directives to zprint on how to handle these functions
+ :fn-map-additions {}
+
+ :project-description "A Lisp-y implementation of B. Jay's unlabelled binary tree
+ calculus"
+ :project-name-formatted "trlisp"
+
+ :readme-UUID #uuid "24d7622e-9828-4fe1-831b-4a4314e293e0"
+
+ :readme-html-directory "doc/"
+ :readme-html-filename "readme.html"
+
+ :readme-markdown-directory ""
+ :readme-markdown-filename "README.md"
+
+ :sections-directory "resources/readme_sections/"
+
+ :separator " => "
+ :wrap-at 80
+
+ :tidy-html? true}
+

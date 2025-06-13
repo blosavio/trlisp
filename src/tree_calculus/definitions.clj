@@ -93,7 +93,7 @@
 (assign-thingy-fn! Mult-Apply)
 
 
-(def Δ (make-thingy))
+(Def Δ (make-thingy))
 
 
 ;; combinators
@@ -284,7 +284,7 @@
                      (T-Cons (f h) (m t f)))))))))
 
 
-(Def List-Map (Swap (Y List-Map-Swap)))
+(Def Map (Swap (Y List-Map-Swap)))
 
 
 (Def List-FoldLeftAux (fn [y] (Δ y (K (K I))
@@ -296,7 +296,7 @@
                                            (lfold t f (f x h))))))))))
 
 
-(Defn List-FoldLeft [f x y] ((Y List-FoldLeftAux) y f x))
+(Defn Fold-Left [f x y] ((Y List-FoldLeftAux) y f x))
 
 
 (Def List-FoldRightAux (fn [y] (Δ y (K (K I))
@@ -308,15 +308,15 @@
                                             (f h (rfold t f x))))))))))
 
 
-(Defn List-FoldRight [f x y] ((Y List-FoldRightAux) y f x))
+(Defn Fold-Right [f x y] ((Y List-FoldRightAux) y f x))
 
 
-(Defn List-Append [xs ys] (List-FoldRight (fn [h t] (T-Cons h t))
-                                          ys
-                                          xs))
+(Defn Append [xs ys] (Fold-Right (fn [h t] (T-Cons h t))
+                                 ys
+                                 xs))
 
 
-(Defn List-Reverse [z] (List-FoldLeft (fn [x y] (T-Cons y x)) T-Nil z))
+(Defn Reverse [z] (Fold-Left (fn [x y] (T-Cons y x)) T-Nil z))
 
 
 (Def Size (Y (fn [x] ((Stem? x)
