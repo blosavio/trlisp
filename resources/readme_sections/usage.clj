@@ -51,8 +51,7 @@
   ". Every entity in tree calculus is a binary tree composed only of different
  patterns of "
   [:code "Δ"]
-  ". The application rules govern the how one or two trees produce another
- tree."]
+  ". The application rules govern how one or two trees produce another tree."]
 
  [:p "Tree calculus defines six application rules. Five rules are the result
  of dispatching on whether the tree in the function position of the list is a
@@ -62,7 +61,7 @@
  [:p "The sixth rule is merely the degenerate case with zero arguments, which
  we'll discuss first."]
 
- [:h4#apply-leaf-to-nothing "Rule 0: Applying a leaf to nothing"]
+ [:h4#apply-leaf-to-nothing "Rule 0: Applying a leaf to nothing"]
 
  [:p "Let's imagine a picture of the first rule: applying a leaf to nothing."]
 
@@ -82,9 +81,9 @@
 
  [:p "This returns a single tree node with zero children."]
 
- [:p "Often times a function definition will involve a bare leaf in the middle
- of a sequence of applications, so those parentheses might get visually
- distracting. If we only need a bare leaf, we may skip the parentheses."]
+ [:p "Often, a function definition will involve a bare leaf in the middle of a
+ sequence of applications, so those parentheses might get visually distracting.
+ If we only need a bare leaf, we may skip the parentheses."]
 
  [:pre (print-form-then-eval "(= (Δ) Δ)")]
 
@@ -94,9 +93,9 @@
   [:code "Δ"]
   " are equivalent."]
 
- [:h4#apply-leaf-to-something "Rule 1: Applying a leaf to something"]
+ [:h4#apply-leaf-to-something "Rule 1: Applying a leaf to something"]
 
- [:p "Now our picture is growing. Since we are applying a leaf to something,
+ [:p "Our picture grows with Rule 1. Since we are applying a leaf to something,
  we'll imagine a leaf as before, plus something else standing to its right.
  Let's call it "
   [:code "z"]
@@ -107,7 +106,7 @@
  [:p [:code "z"] " will be some unspecified tree that can be operated on,
  either another leaf, a stem, or some unspecified fork."]
 
- [:p "To be exceedingly explicit, let's introduce a symbol "
+ [:p "To make our picture exceedingly explicit, let's introduce a symbol "
   [:code "␣"]
   " to visually separate the function and the argument."]
 
@@ -133,8 +132,8 @@
   [:em "Function "
    [:code "Δ"]
    " applied to argument "
-   [:code "z"]
-   "."]]
+   [:code "z"]]
+  ", which is the same interpretation we just gave our picture."]
 
  [:p "When the " [:code "Δ"] " function is evaluated with one argument, a stem
  results with the argument forming the single child branch. Here is a picture of
@@ -147,7 +146,7 @@
   [:code "z"]
   " branching straight off its bottom."]
 
- [:h4#apply-stem "Rule 2: Applying a stem"]
+ [:h4#apply-stem "Rule 2: Applying a stem"]
 
  [:p "Let's visualize applying a stem to something."]
 
@@ -189,7 +188,7 @@
 
  [:pre [:code (make-fork "x" "z")]]
 
- [:p "Root node at top and children, in order, branching off the bottom."]
+ [:p "Root node at top and two children, in order, branching off the bottom."]
 
  [:p "An "
   [:a {:href "#variadic"} "upcoming section"]
@@ -203,7 +202,7 @@
  forks. When applying a fork, trlisp dispatches on whether the left child itself
  is a leaf, stem, or fork."]
 
- [:h4#apply-fork-leaf "Rule 3: Applying a fork with left child leaf"]
+ [:h4#apply-fork-leaf "Rule 3: Applying a fork with left child leaf"]
 
  [:p "Here is a picture of applying a fork, where the left child is a leaf, to
  an argument "
@@ -260,12 +259,14 @@
  application of that fork to anything returns the fork's right branch and
  discards the argument. In this case, the function's right child is "
   [:code "y"]
-  ", which is returned."]
+  ", which is returned. Argument "
+  [:code "z"]
+  " is discarded."]
 
  [:p "One way to look at this is the sequential application of a stem to two
  arguments "
   [:code "y"]
-  " then "
+  ", then "
   [:code "z"]
   "."]
 
@@ -292,7 +293,7 @@
   [:code "y"]
   "."]
 
- [:h4#apply-fork-stem "Rule 4: Applying a fork with left child stem"]
+ [:h4#apply-fork-stem "Rule 4: Applying a fork with left child stem"]
 
  [:p "Here is a picture of a function composed of a fork with a left child
  stem."]
@@ -346,7 +347,7 @@
  the result of the second evaluation. This pattern often appears in definitions
  because it's useful to be able to swap two items."]
 
- [:h4#apply-fork-fork "Rule 5: Applying a fork with left child fork"]
+ [:h4#apply-fork-fork "Rule 5: Applying a fork with left child fork"]
 
  [:p "The final application rule involves a function whose left fork is itself a
  fork. Let's visualize that situation."]
@@ -395,14 +396,15 @@
 
  [:pre [:code "(z w x)"]]
 
- [:p "Applying a fork with a left child fork results in applying the argument "
+ [:p "Applying a fork with a left child fork results in making the argument "
   [:code "z"]
-  " to the decomposition of the function's left child's branches "
+  " the new function, with the decomposition of the function's left child's
+ branches "
   [:code "w"]
   " and "
   [:code "x"]
-  ". This pattern is useful when we need to pull apart a fork and send the
- pieces to a function."]
+  " the new arguments. This pattern is useful when we need to pull apart a fork
+ and send the pieces to a function."]
 
  [:p "The next two subsections introduce a few conveniences."]
 
@@ -412,8 +414,7 @@
  number of arguments and trlisp will sequentially apply them by
  left-association. For example, when we evaluate the "
   [:code "Δ"]
-  " function with two arguments, we obtain a fork. Let's supply two
-arguments, "
+  " function with two arguments, we obtain a fork. Let's supply arguments "
   [:code "x"]
   " and "
   [:code "y"]
@@ -529,7 +530,7 @@ arguments, "
  [:h3#implementation "Implementation Note"]
 
  [:p "Tree calculus trees have a dual nature: they are both structures and
- functions. That is, trees may "
+ functions. That is, trees "
   [:em "contain"]
   " an arbitrary pattern of descendants, but at the same time, they
  conceptually " [:em "apply"]
@@ -538,9 +539,9 @@ arguments, "
 
  [:p "Clojure vectors are handy because, while they are exceedingly capable at
  storing and retrieving arbitrary values, they support an interface that allows
- them to behave as a Lisp function. For example, when a Clojure vector is
- placed in the function position of a list and an integer argument follows in
- the tail, the vector invokes an implied accessor function, "
+ them to behave as a Lisp function. When a Clojure vector is placed in the
+ function position of a list and an integer argument follows in the tail, the
+ vector invokes an implied accessor function, "
   [:a {:href "https://clojure.github.io/clojure/clojure.core-api.html#clojure.core/nth"}
    [:code "nth"]]
   ", which returns the value at the index."]
@@ -563,18 +564,20 @@ arguments, "
 
  [:p "Putting a vector at the head of a list is a widely-used Clojure idiom."]
 
- [:p "Since Clojure hosts trlisp, the machinery is in place for vectors to
- serve a functions. We merely need to change that function from the accessor
+ [:p "Since Clojure hosts trlisp, vectors possess the machinery to serve as
+ functions. We merely need to change that machinery from the accessor
  function "
   [:code "nth"]
-  " to a different function that implements tree calculus' application rules."]
+  " to a different machine that implements tree calculus' application rules."]
 
  [:p "trlisp models a tree as an "
   [:a {:href "https://github.com/blosavio/thingy"}
    "altered Clojure vector"]
   " containing up to two other such altered vectors. These nested vectors
  provide the reified structure representing tree calculus' unlabelled binary
- trees."]
+ trees. Since trlisp's vectors are altered so that the invocation machinery
+ implements tree calculus' application rules, these nested vectors may serve as
+ functions when placed at the head of a list."]
 
  [:p "A single node is simply an empty vector, i.e., it has no descendants. We
  can observe this by evaluating a bare node."]
@@ -601,6 +604,10 @@ arguments, "
  [:p "We could have equivalently written the following."]
 
  [:pre [:code "([] []) ;; => [[]]"]]
+
+ [:p "If these were Clojure's normal vectors, evaluating that expression would
+ result in an error. But since trlisp uses a special vector that implements tree
+ calculus' application rules, it works fine."]
 
  [:p "The first special vector in the function position "
   [:code "[]"]
@@ -678,20 +685,20 @@ arguments, "
 
  [:p "The expression can now return a valid value, but we are still left with
  the problem of figuring out what the tree "
-  [:code (str ((h i) (j k)))]
+  [:code (clojure.string/replace (str ((h i) (j k))) #" " " ")]
   " looks like."]
 
  [:p "trlisp doesn't currently (and may never) have a utility which renders tree
  diagrams. When walking through our discussion, I will silently replace things
  like "
-  [:code (str ((h i) (j k)))]
+  [:code (clojure.string/replace (str ((h i) (j k))) #" " " ")]
   " with its equivalent "
-  [:code "(Δ Δ K)"]
+  [:code "(Δ Δ K)"]
   "."]
 
  [:p "Just keep in mind that if you are evaluating trlisp expressions on your
  own computer, you will see "
-  [:code (str ((h i) (j k)))]
+  [:code (clojure.string/replace (str ((h i) (j k))) #" " " ")]
   "."]
 
  [:p "To illustrate how function trees apply to arguments trees and return
@@ -703,7 +710,7 @@ arguments, "
 
  [:p "That's...okay. But working it out with pencil and paper, we expect it to
  return "
-  [:code "(Δ Δ Δ)"]
+  [:code "(Δ Δ Δ)"]
   ". Is that the case?"]
 
  [:pre (print-form-then-eval "(= ((Δ Δ) Δ) (Δ Δ Δ))" 12 12)]
@@ -765,10 +772,9 @@ arguments, "
 
  [:h3 "Recommendations"]
 
- [:p "It helped me greatly to work out the examples with a pencil and paper, and
- only then check their evaluations in trlisp. Letting the computer do all the
- work stymies a deeper understanding we might get by slinging around tree nodes
- by hand."]
+ [:p "First, work out the examples with a pencil and paper, and only then check
+ their evaluations in trlisp. Letting the computer do all the work stymies a
+ deeper understanding we might get by slinging around tree nodes by hand."]
 
  [:p "The "
   [:a {:href "https://github.com/blosavio/trlisp/blob/main/test/tree_calculus/definitions_test.clj"}

@@ -3,7 +3,7 @@
             {:section-name "Changelog" :section-href "https://github.com/blosavio/trlisp/blob/main/changelog.md" :skip-section-load? true}
             {:section-name "Introduction" :section-href "intro"}
             {:section-name "Usage" :section-href "usage"}
-            {:section-name "Fundamental functions" :section-href "fundamental"}
+            {:section-name "Fundamental combinators" :section-href "fundamental"}
             {:section-name "Base functions" :section-href "base"}
             {:section-name "Comments" :section-href "comments"}
             {:section-name "References" :section-href "references"}

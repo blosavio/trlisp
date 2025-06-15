@@ -6,7 +6,7 @@
     <a href="https://github.com/blosavio/trlisp/blob/main/changelog.md">Changelog</a><br>
     <a href="#intro">Introduction</a><br>
     <a href="#usage">Usage</a><br>
-    <a href="#fundamental">Fundamental functions</a><br>
+    <a href="#fundamental">Fundamental combinators</a><br>
     <a href="#base">Base functions</a><br>
     <a href="#comments">Comments</a><br>
     <a href="#references">References</a><br>
@@ -51,10 +51,10 @@
           <strong>Comparison</strong> We may test two functions for equality, &nbsp;equivalence, etc.
         </li>
         <li>
-          <strong>Optimization</strong> We may precompute some static branch of a &nbsp;function, or alter it for more efficiency.
+          <strong>Optimization</strong> We may precompute some static branch of the &nbsp;function, or alter it for more efficiency.
         </li>
         <li>
-          <strong>Decomposition</strong> We may pull out different pieces of a &nbsp;function, perhaps for use in a different context.
+          <strong>Decomposition</strong> We may pull out different pieces of the &nbsp;function, perhaps for use in a different context.
         </li>
         <li>
           <strong>Modification</strong> We may change some facet of the function at &nbsp;runtime to suit our needs.
@@ -62,10 +62,12 @@
       </ul>
       <p></p>
       <p>
-        <em>trlisp</em> is an implementation of tree calculus with the small, &nbsp;regular grammar of Lisp. The element at the head of a list, the function
-        &nbsp;position, is invoked, with the elements of the tail of the list providing &nbsp;the arguments. Unlike traditional Lisps, <em>trlisp</em>
-        functions may be &nbsp;transparently decomposed so that the function may be inspected, analyzed, &nbsp;compared, optimized, decomposed, and modified,
-        without the need for quotation. &nbsp;That is to say, trlisp functions are reflective.
+        <em>trlisp</em> is an implementation of tree calculus with the compact, &nbsp;uniform grammar of Lisp. The element at the head of a list, the function
+        &nbsp;position, is invoked, with the elements of the tail of the list providing &nbsp;the arguments.
+      </p>
+      <p>
+        Unlike traditional Lisps, trlisp functions may be transparently decomposed &nbsp;so that the function may be inspected, analyzed, compared, optimized,
+        &nbsp;decomposed, and modified, without the need for quotation. That is to say, &nbsp;trlisp functions are reflective.
       </p>
       <p>
         <em>trlisp</em> is intended to be used to explore practical questions such &nbsp;as
@@ -119,7 +121,7 @@
         A notable aspect of tree calculus is that every <em>thing</em>, functions as well as values, is composed of a single, basic unit, <code>Δ</code>. So we
         must continually keep in mind that there is not a strict delineation &nbsp;between tree calculus functions, such as the <code>+</code> function, and
         tree calculus scalar values, such as integer <code>3</code>. Every entity in tree calculus is a binary tree composed only of different &nbsp;patterns
-        of <code>Δ</code>. The application rules govern the how one or two trees produce another &nbsp;tree.
+        of <code>Δ</code>. The application rules govern how one or two trees produce another tree.
       </p>
       <p>
         Tree calculus defines six application rules. Five rules are the result &nbsp;of dispatching on whether the tree in the function position of the list is
@@ -129,7 +131,7 @@
         The sixth rule is merely the degenerate case with zero arguments, which &nbsp;we&apos;ll discuss first.
       </p>
       <h4 id="apply-leaf-to-nothing">
-        Rule 0: Applying a leaf to nothing
+        Rule&nbsp;0: Applying a leaf to nothing
       </h4>
       <p>
         Let&apos;s imagine a picture of the first rule: applying a leaf to nothing.
@@ -148,26 +150,26 @@
         This returns a single tree node with zero children.
       </p>
       <p>
-        Often times a function definition will involve a bare leaf in the middle &nbsp;of a sequence of applications, so those parentheses might get visually
-        &nbsp;distracting. If we only need a bare leaf, we may skip the parentheses.
+        Often, a function definition will involve a bare leaf in the middle of a &nbsp;sequence of applications, so those parentheses might get visually
+        distracting. &nbsp;If we only need a bare leaf, we may skip the parentheses.
       </p>
       <pre><code>(= (Δ) Δ) ;; =&gt; true</code></pre>
       <p>
         We can see that <code>(Δ)</code> and <code>Δ</code> are equivalent.
       </p>
       <h4 id="apply-leaf-to-something">
-        Rule 1: Applying a leaf to something
+        Rule&nbsp;1: Applying a leaf to something
       </h4>
       <p>
-        Now our picture is growing. Since we are applying a leaf to something, &nbsp;we&apos;ll imagine a leaf as before, plus something else standing to its
-        right. &nbsp;Let&apos;s call it <code>z</code>.
+        Our picture grows with Rule&nbsp;1. Since we are applying a leaf to something, &nbsp;we&apos;ll imagine a leaf as before, plus something else standing
+        to its right. &nbsp;Let&apos;s call it <code>z</code>.
       </p>
       <pre><code>Δ     z</code></pre>
       <p>
         <code>z</code> will be some unspecified tree that can be operated on, &nbsp;either another leaf, a stem, or some unspecified fork.
       </p>
       <p>
-        To be exceedingly explicit, let&apos;s introduce a symbol <code>␣</code> to visually separate the function and the argument.
+        To make our picture exceedingly explicit, let&apos;s introduce a symbol <code>␣</code> to visually separate the function and the argument.
       </p>
       <pre><code>Δ  ␣  z</code></pre>
       <p>
@@ -179,7 +181,8 @@
       </p>
       <pre><code>(Δ z)</code></pre>
       <p>
-        A Lisp programmer would read that expression as <em>Function <code>Δ</code> applied to argument <code>z</code>.</em>
+        A Lisp programmer would read that expression as <em>Function <code>Δ</code> applied to argument <code>z</code></em>, which is the same interpretation
+        we just gave our picture.
       </p>
       <p>
         When the <code>Δ</code> function is evaluated with one argument, a stem &nbsp;results with the argument forming the single child branch. Here is a
@@ -192,7 +195,7 @@ z</code></pre>
         The expression returns a stem: a root node at the top, with a single child &nbsp;element <code>z</code> branching straight off its bottom.
       </p>
       <h4 id="apply-stem">
-        Rule 2: Applying a stem
+        Rule&nbsp;2: Applying a stem
       </h4>
       <p>
         Let&apos;s visualize applying a stem to something.
@@ -229,7 +232,7 @@ x</code></pre>
 &nbsp;/ \
 x   z</code></pre>
       <p>
-        Root node at top and children, in order, branching off the bottom.
+        Root node at top and two children, in order, branching off the bottom.
       </p>
       <p>
         An <a href="#variadic">upcoming section</a> discusses ways to write this more efficiently.
@@ -243,7 +246,7 @@ x   z</code></pre>
         child itself &nbsp;is a leaf, stem, or fork.
       </p>
       <h4 id="apply-fork-leaf">
-        Rule 3: Applying a fork with left child leaf
+        Rule&nbsp;3: Applying a fork with left child leaf
       </h4>
       <p>
         Here is a picture of applying a fork, where the left child is a leaf, to &nbsp;an argument <code>z</code>.
@@ -290,10 +293,10 @@ x   z</code></pre>
       <pre><code>(((Δ Δ) y) z)</code></pre>
       <p>
         Tree calculus declares that if the left child of a fork is a leaf, &nbsp;application of that fork to anything returns the fork&apos;s right branch and
-        &nbsp;discards the argument. In this case, the function&apos;s right child is <code>y</code>, which is returned.
+        &nbsp;discards the argument. In this case, the function&apos;s right child is <code>y</code>, which is returned. Argument <code>z</code> is discarded.
       </p>
       <p>
-        One way to look at this is the sequential application of a stem to two &nbsp;arguments <code>y</code> then <code>z</code>.
+        One way to look at this is the sequential application of a stem to two &nbsp;arguments <code>y</code>, then <code>z</code>.
       </p>
       <pre><code>Δ
 |  ␣  y  ␣  z
@@ -311,7 +314,7 @@ x   z</code></pre>
         are all equivalent: All return <code>y</code>.
       </p>
       <h4 id="apply-fork-stem">
-        Rule 4: Applying a fork with left child stem
+        Rule&nbsp;4: Applying a fork with left child stem
       </h4>
       <p>
         Here is a picture of a function composed of a fork with a left child &nbsp;stem.
@@ -362,7 +365,7 @@ x</code></pre>
         definitions &nbsp;because it&apos;s useful to be able to swap two items.
       </p>
       <h4 id="apply-fork-fork">
-        Rule 5: Applying a fork with left child fork
+        Rule&nbsp;5: Applying a fork with left child fork
       </h4>
       <p>
         The final application rule involves a function whose left fork is itself a &nbsp;fork. Let&apos;s visualize that situation.
@@ -409,8 +412,9 @@ w   x</code></pre>
       </p>
       <pre><code>(z w x)</code></pre>
       <p>
-        Applying a fork with a left child fork results in applying the argument <code>z</code> to the decomposition of the function&apos;s left child&apos;s
-        branches <code>w</code> and <code>x</code>. This pattern is useful when we need to pull apart a fork and send the &nbsp;pieces to a function.
+        Applying a fork with a left child fork results in making the argument <code>z</code> the new function, with the decomposition of the function&apos;s
+        left child&apos;s &nbsp;branches <code>w</code> and <code>x</code> the new arguments. This pattern is useful when we need to pull apart a fork
+        &nbsp;and send the pieces to a function.
       </p>
       <p>
         The next two subsections introduce a few conveniences.
@@ -420,8 +424,8 @@ w   x</code></pre>
       </h4>
       <p>
         trlisp provides a convenience to minimize parentheses: We may supply any &nbsp;number of arguments and trlisp will sequentially apply them by
-        &nbsp;left-association. For example, when we evaluate the <code>Δ</code> function with two arguments, we obtain a fork. Let&apos;s supply two
-        arguments, <code>x</code> and <code>y</code>, two unspecified trees.
+        &nbsp;left-association. For example, when we evaluate the <code>Δ</code> function with two arguments, we obtain a fork. Let&apos;s supply arguments
+        <code>x</code> and <code>y</code>, two unspecified trees.
       </p>
       <pre><code>(Δ x y)</code></pre>
       <p>
@@ -580,14 +584,14 @@ w   x</code></pre>
         Implementation Note
       </h3>
       <p>
-        Tree calculus trees have a dual nature: they are both structures and &nbsp;functions. That is, trees may <em>contain</em> an arbitrary pattern of
+        Tree calculus trees have a dual nature: they are both structures and &nbsp;functions. That is, trees <em>contain</em> an arbitrary pattern of
         descendants, but at the same time, they &nbsp;conceptually <em>apply</em> a transform to an argument. Any implementation must therefore capture these
         &nbsp;two properties.
       </p>
       <p>
         Clojure vectors are handy because, while they are exceedingly capable at &nbsp;storing and retrieving arbitrary values, they support an interface that
-        allows &nbsp;them to behave as a Lisp function. For example, when a Clojure vector is &nbsp;placed in the function position of a list and an integer
-        argument follows in &nbsp;the tail, the vector invokes an implied accessor function, <a href=
+        allows &nbsp;them to behave as a Lisp function. When a Clojure vector is placed in the &nbsp;function position of a list and an integer argument
+        follows in the tail, the &nbsp;vector invokes an implied accessor function, <a href=
         "https://clojure.github.io/clojure/clojure.core-api.html#clojure.core/nth"><code>nth</code></a>, which returns the value at the index.
       </p>
       <p>
@@ -602,12 +606,14 @@ w   x</code></pre>
         Putting a vector at the head of a list is a widely-used Clojure idiom.
       </p>
       <p>
-        Since Clojure hosts trlisp, the machinery is in place for vectors to &nbsp;serve a functions. We merely need to change that function from the accessor
-        &nbsp;function <code>nth</code> to a different function that implements tree calculus&apos; application rules.
+        Since Clojure hosts trlisp, vectors possess the machinery to serve as &nbsp;functions. We merely need to change that machinery from the accessor
+        &nbsp;function <code>nth</code> to a different machine that implements tree calculus&apos; application rules.
       </p>
       <p>
         trlisp models a tree as an <a href="https://github.com/blosavio/thingy">altered Clojure vector</a> containing up to two other such altered vectors.
-        These nested vectors &nbsp;provide the reified structure representing tree calculus&apos; unlabelled binary &nbsp;trees.
+        These nested vectors &nbsp;provide the reified structure representing tree calculus&apos; unlabelled binary &nbsp;trees. Since trlisp&apos;s vectors
+        are altered so that the invocation machinery &nbsp;implements tree calculus&apos; application rules, these nested vectors may serve as &nbsp;functions
+        when placed at the head of a list.
       </p>
       <p>
         A single node is simply an empty vector, i.e., it has no descendants. We &nbsp;can observe this by evaluating a bare node.
@@ -633,6 +639,10 @@ w   x</code></pre>
         We could have equivalently written the following.
       </p>
       <pre><code>([] []) ;; =&gt; [[]]</code></pre>
+      <p>
+        If these were Clojure&apos;s normal vectors, evaluating that expression would &nbsp;result in an error. But since trlisp uses a special vector that
+        implements tree &nbsp;calculus&apos; application rules, it works fine.
+      </p>
       <p>
         The first special vector in the function position <code>[]</code> applied to another special vector <code>[]</code> invokes tree calculus&apos;
         application rules. In this case, according to &nbsp;Rule&nbsp;1, a leaf (empty vector) applied to another tree (also a leaf in this &nbsp;case),
@@ -688,15 +698,15 @@ w   x</code></pre>
       </p>
       <pre><code>(def h Δ)</code><br><code>(def i Δ)</code><br><code>(def j Δ)</code><br><code>(def k Δ)</code><br><br><code>((h i) (j k)) ;; =&gt; [[] [[]]]</code></pre>
       <p>
-        The expression can now return a valid value, but we are still left with &nbsp;the problem of figuring out what the tree <code>[[] [[]]]</code> looks
-        like.
+        The expression can now return a valid value, but we are still left with &nbsp;the problem of figuring out what the tree <code>[[]&nbsp;[[]]]</code>
+        looks like.
       </p>
       <p>
         trlisp doesn&apos;t currently (and may never) have a utility which renders tree &nbsp;diagrams. When walking through our discussion, I will silently
-        replace things &nbsp;like <code>[[] [[]]]</code> with its equivalent <code>(Δ Δ K)</code>.
+        replace things &nbsp;like <code>[[]&nbsp;[[]]]</code> with its equivalent <code>(Δ&nbsp;Δ&nbsp;K)</code>.
       </p>
       <p>
-        Just keep in mind that if you are evaluating trlisp expressions on your &nbsp;own computer, you will see <code>[[] [[]]]</code>.
+        Just keep in mind that if you are evaluating trlisp expressions on your &nbsp;own computer, you will see <code>[[]&nbsp;[[]]]</code>.
       </p>
       <p>
         To illustrate how function trees apply to arguments trees and return &nbsp;other trees, we can test for equality with the expected value. For example,
@@ -704,7 +714,7 @@ w   x</code></pre>
       </p>
       <pre><code>((Δ Δ) Δ) ;; =&gt; [[] []]</code></pre>
       <p>
-        That&apos;s...okay. But working it out with pencil and paper, we expect it to &nbsp;return <code>(Δ Δ Δ)</code>. Is that the case?
+        That&apos;s...okay. But working it out with pencil and paper, we expect it to &nbsp;return <code>(Δ&nbsp;Δ&nbsp;Δ)</code>. Is that the case?
       </p>
       <pre><code>(= ((Δ Δ) Δ)
 &nbsp;  (Δ Δ Δ)) ;; =&gt; true</code></pre>
@@ -754,8 +764,8 @@ w   x</code></pre>
         Recommendations
       </h3>
       <p>
-        It helped me greatly to work out the examples with a pencil and paper, and &nbsp;only then check their evaluations in trlisp. Letting the computer do
-        all the &nbsp;work stymies a deeper understanding we might get by slinging around tree nodes &nbsp;by hand.
+        First, work out the examples with a pencil and paper, and only then check &nbsp;their evaluations in trlisp. Letting the computer do all the work
+        stymies a &nbsp;deeper understanding we might get by slinging around tree nodes by hand.
       </p>
       <p>
         The <a href="https://github.com/blosavio/trlisp/blob/main/test/tree_calculus/definitions_test.clj">unit testing</a> namespace (and its <a href=
@@ -769,11 +779,11 @@ w   x</code></pre>
     </section>
     <section id="fundamental">
       <h2>
-        Fundamental functions
+        Fundamental combinators
       </h2>
       <p>
-        Tree calculus functions could be defined purely in terms of <code>Δ</code>, but some judicious naming and binding helps make programming in trlisp more
-        &nbsp;ergonomic. Let&apos;s <a href="https://blosavio.github.io/trlisp/tree-calculus.definitions.html">define</a> a small number of fundamental
+        Tree calculus functions and values could be defined purely in terms of <code>Δ</code>, but some judicious naming helps make programming in trlisp more
+        ergonomic. &nbsp;Let&apos;s <a href="https://blosavio.github.io/trlisp/tree-calculus.definitions.html">define</a> a small number of fundamental
         functions, and along the way, we will see the &nbsp;application rules in action.
       </p>
       <h3 id="K-combinator">
@@ -788,20 +798,21 @@ w   x</code></pre>
       </p>
       <pre><code>(K Δ (Δ Δ Δ)) ;; =&gt; Δ</code></pre>
       <p>
-        Given trees <code>Δ</code> and <code>(Δ Δ Δ)</code>, <code>K</code> returns <code>Δ</code>, the first argument, and discards the second argument. Here,
-        we are using &nbsp;concrete trees to demonstrate the behavior, but <code>K</code> works the same on any pair of trees.
+        Given trees <code>Δ</code> and <code>(Δ&nbsp;Δ&nbsp;Δ)</code>, <code>K</code> returns <code>Δ</code>, the first argument, and discards the second
+        argument. Here, we are using &nbsp;concrete trees to demonstrate the behavior, but <code>K</code> works the same on any pair of trees.
       </p>
       <p>
         We&apos;ve already seen in our discussion of the tree calculus application &nbsp;rules that <a href="#apply-fork-leaf">Rule&nbsp;3</a> declares that a
-        fork-leaf always returns the first of a pair of arguments. &nbsp;So we know that we can create a K combinator by adopting that fork-leaf &nbsp;pattern.
+        fork-leaf always returns the first of a pair of arguments. &nbsp;So we know that we can create a K&nbsp;combinator by adopting that fork-leaf
+        &nbsp;pattern.
       </p>
       <p>
-        Putting an expression that evaluates to a fork-leaf <code>(Δ Δ)</code> in the function position and applying it to two arguments, dispatches on
+        Putting an expression that evaluates to a fork-leaf <code>(Δ&nbsp;Δ)</code> in the function position and applying it to two arguments, dispatches on
         &nbsp;application Rule&nbsp;3, and returns the first argument.
       </p>
       <pre><code>((Δ Δ) Δ (Δ Δ Δ)) ;; =&gt; Δ</code></pre>
       <p>
-        <code>(Δ Δ)</code> evaluates to <code>K</code> so this expression returns the exact same <code>Δ</code> as before.
+        <code>(Δ Δ)</code> evaluates to <code>K</code>, so this expression returns the exact same <code>Δ</code> as before.
       </p>
       <p>
         We&apos;ve demonstrated that once we&apos;ve composed a tree that triggers a &nbsp;particular tree calculus application rule, we can use that tree to
@@ -810,9 +821,9 @@ w   x</code></pre>
       <p>
         In fact, trlisp&apos;s <a href=
         "https://github.com/blosavio/trlisp/blob/0f9f83904ebf16b54e8429ab5559aebce6e00b77/src/tree_calculus/definitions.clj#L102">actual definition</a> shows
-        us that <code>K</code> is simply defined as <code>(Δ Δ)</code>. Now that the symbol <code>K</code> is bound to a tree that creates a fork-leaf tree
-        when given two arguments, we &nbsp;can easily re-use the semantic idea of <em>Take the first argument, discard the second argument</em> in any future
-        expression.
+        us that <code>K</code> is simply defined as <code>(Δ&nbsp;Δ)</code>. Now that the symbol <code>K</code> is bound to a tree that creates a fork-leaf
+        tree when given two arguments, we &nbsp;can easily re-use the semantic idea of <em>Take the first argument, discard the second argument</em> in any
+        future expression.
       </p>
       <h3 id="D-combinator">
         D combinator
@@ -837,8 +848,8 @@ w   x</code></pre>
 |
 Δ</pre>
       <p>
-        To see <code>D</code> in action, we&apos;ll assign <code>x</code>, <code>y</code>, and <code>z</code> to concrete trees, any of which may occupy the
-        function position.
+        To see D in action, we&apos;ll assign <code>x</code>, <code>y</code>, and <code>z</code> to concrete trees, any of which may occupy the function
+        position.
       </p>
       <pre><code>(def x (K Δ))</code><br><code>(def y (K Δ))</code><br><code>(def z K)</code></pre>
       <p>
@@ -849,14 +860,14 @@ w   x</code></pre>
       </p>
       <pre><code>(y z) ;; =&gt; Δ</code></pre>
       <p>
-        because <code>(K Δ K)</code> yields <code>Δ</code> due to application of the K combinator.
+        because <code>(K&nbsp;Δ&nbsp;K)</code> yields <code>Δ</code> due to application of the K&nbsp;combinator.
       </p>
       <p>
         The second sub-component is identical to the first.
       </p>
       <pre><code>(x z) ;; =&gt; Δ</code></pre>
       <p>
-        Now let&apos;s evaluate the value of <code>(y z)</code> applied to the value of <code>(x z)</code>.
+        Now let&apos;s evaluate the value of <code>(y&nbsp;z)</code> applied to the value of <code>(x&nbsp;z)</code>.
       </p>
       <pre><code>(Δ Δ) ;; =&gt; K</code></pre>
       <p>
@@ -868,8 +879,8 @@ w   x</code></pre>
       </p>
       <pre><code>(D x y z) ;; =&gt; K</code></pre>
       <p>
-        Notice that, as with the K combinator, the D combinator is a tree &nbsp;deliberately composed to invoke a particular application rule, in this
-        &nbsp;instance, Rule&nbsp;4 for fork-stems. After a couple rounds of application, we &nbsp;obtain the following expression.
+        Notice that, as with the K&nbsp;combinator, the D&nbsp;combinator is a tree &nbsp;deliberately composed to invoke a particular application rule, in
+        this &nbsp;instance, Rule&nbsp;4 for fork-stems. After a couple rounds of application, we &nbsp;obtain the following picture.
       </p>
       <pre><code>  Δ
 &nbsp;/ \
@@ -881,7 +892,7 @@ x</code></pre>
       </p>
       <pre><code>((y z) (x z))</code></pre>
       <p>
-        which is the D combinator&apos;s essence.
+        which is the D&nbsp;combinator&apos;s essence.
       </p>
       <p>
         If we work out that sequence of evaluations by hand, we notice that D &nbsp;applied to the first argument <code>x</code> always eventually evaluates to
@@ -900,7 +911,7 @@ x</code></pre>
       </p>
       <pre><code>((d x) y z) ;; =&gt; ((y z) (x z))</code></pre>
       <p>
-        which is the same result produced by the D combinator.
+        which is the same result produced by the D&nbsp;combinator.
       </p>
       <h3 id="S-combinator">
         S combinator
@@ -910,13 +921,13 @@ x</code></pre>
         is &nbsp;a combinator that broadcasts the third argument to the first two arguments &nbsp;while maintaining the order.
       </p>
       <p>
-        The <em>S combinator</em> works like this
+        The <em>S&nbsp;combinator</em> works like this
       </p>
       <pre><code>(S x y z) ;; =&gt; ((x z) (y z))</code></pre>
       <p>
         and can be <a href=
         "https://github.com/blosavio/trlisp/blob/0f9f83904ebf16b54e8429ab5559aebce6e00b77/src/tree_calculus/definitions.clj#L116-L117">defined</a> in terms of
-        <code>d</code>, <code>D</code>, and <code>K</code>.
+        <code>d</code>, <code>D</code>, and&nbsp;<code>K</code>.
       </p>
       <p>
         We can test the definition by evaluating with arguments <code>x</code>, <code>y</code>, and <code>z</code> from the previous subsection.
@@ -935,7 +946,7 @@ x</code></pre>
         I combinator
       </h3>
       <p>
-        Another crucial combinator is the <em>I combinator</em>, which returns exactly its single argument.
+        Another crucial combinator is the <em>I&nbsp;combinator</em>, which returns exactly its single argument.
       </p>
       <pre><code>(I x) ;; =&gt; x</code></pre>
       <p>
@@ -953,11 +964,12 @@ x</code></pre>
 |   |
 Δ   Δ</code></pre>
       <p>
-        Note that the tree structure of I combinator is designed to invoke &nbsp;Rule&nbsp;4, applying fork-stems, then immediately thereafter applies
-        &nbsp;Rule&nbsp;3, for fork-leaves to discard the second expression, returning &nbsp;exactly the argument. <em>The structure encodes the behavior.</em>
+        Note that the tree structure of I&nbsp;combinator is designed to invoke &nbsp;Rule&nbsp;4, applying fork-stems, then immediately thereafter applies
+        &nbsp;Rule&nbsp;3, for fork-leaves to discard the second expression, returning &nbsp;exactly the argument. <strong>The structure encodes the
+        behavior.</strong>
       </p>
       <p>
-        The I combinator appears in many upcoming definitions, including a key &nbsp;role in defining Boolean entities.
+        The I&nbsp;combinator appears in many upcoming definitions, including a key &nbsp;role in defining Boolean entities.
       </p>
       <h3 id="Y-combinator">
         Y combinator
@@ -975,8 +987,8 @@ x</code></pre>
         "https://blosavio.github.io/trlisp/tree-calculus.definitions.html#var-W">W</a> combinators, but does not use them for any further purposes.
       </p>
       <p>
-        It turns out that we won&apos;t often directly use any of these fundamental &nbsp;functions in day-to-day programming, but they are critical building
-        blocks for &nbsp;the functions we <em>do</em> use.
+        It turns out that we wouldn&apos;t often directly use any of these combinators &nbsp;in day-to-day programming, but they are critical building blocks
+        for the <a href="#base">functions</a> we <em>do</em> use.
       </p>
     </section>
     <section id="base">
@@ -984,9 +996,10 @@ x</code></pre>
         Base functions
       </h2>
       <p>
-        Now we&apos;ll discuss functions that might be useful for solving day-to-day &nbsp;problems. We should always keep in mind that these functions are
-        <a href="https://github.com/blosavio/trlisp/blob/0f9f83904ebf16b54e8429ab5559aebce6e00b77/src/tree_calculus/definitions.clj#L129">defined</a> (almost)
-        solely in terms of <code>Δ</code>, or other trees themselves defined with <code>Δ</code>, a key characteristic of tree calculus.
+        In contrast to the <a href="#fundamental">fundamental combinators</a>, these functions might be useful for solving day-to-day problems. We should
+        &nbsp;continually keep in mind that these functions are <a href=
+        "https://github.com/blosavio/trlisp/blob/0f9f83904ebf16b54e8429ab5559aebce6e00b77/src/tree_calculus/definitions.clj#L129">defined</a> (almost) solely
+        in terms of <code>Δ</code>, or other trees themselves defined with <code>Δ</code>, a key characteristic of tree calculus.
       </p>
       <h3 id="Boolean">
         Booleans
@@ -1010,8 +1023,8 @@ x</code></pre>
         Arithmetic
       </h3>
       <p>
-        Similar to Church encoding, tree calculus represents natural numbers as &nbsp;repeated application of <code>K</code> such that number <em>n</em> is
-        represented by <em>K<sup>n</sup>Δ</em>. Let&apos;s formulate the first few numbers and visualize them.
+        Similar to Church encoding, tree calculus represents natural numbers as &nbsp;repeated application of <code>K</code> such that number&nbsp;<em>n</em>
+        is represented by <em>K<sup>n</sup>Δ</em>. Let&apos;s formulate the first few numbers and visualize them.
       </p>
       <table>
         <tr>
@@ -1097,8 +1110,8 @@ x</code></pre>
       </p>
       <pre><code>(nat-&gt;tree 2) ;; =&gt; [[] [[] []]]</code><br><br><code>(tree-&gt;nat (K (K Δ))) ;; =&gt; 2</code></pre>
       <p>
-        All the following functions require us to supply the arguments as the tree &nbsp;representation, not the plain integers, so we&apos;ll be replying on
-        <code>nat-&gt;tree</code> and <code>tree-&gt;nat</code>.
+        All the following functions require us to supply the arguments as trees, &nbsp;not plain integers, so we&apos;ll often be relying on
+        <code>nat-&gt;tree</code> and <code>tree-&gt;nat</code>. Here&apos;s why.
       </p>
       <p>
         trlisp provides the classic <em>increment</em> and <em>decrement</em> functions. Let&apos;s calculate what arrives after integer <em>One</em>.
@@ -1122,10 +1135,10 @@ x</code></pre>
         That&apos;s a tad better.
       </p>
       <p>
-        We feed plain integer <code>2</code> into <code>nat-&gt;tree</code>, which converts it into the tree representation <code>[[] [[] []]]</code>. Then, we
-        feed that tree into <code>Successor</code>, which does its calculation, returning yet another tree. Finally, we feed &nbsp;that tree into
-        <code>tree-&gt;nat</code>, which hands us an understandable integer <code>3</code>, which, since we paid attention in school, we have good reason to
-        believe is &nbsp;the correct answer.
+        We feed plain integer <code>2</code> into <code>nat-&gt;tree</code>, which converts it into the tree representation
+        <code>[[]&nbsp;[[]&nbsp;[]]]</code>. Then, we feed that tree into <code>Successor</code>, which does its calculation, returning yet another tree.
+        Finally, we feed &nbsp;that tree into <code>tree-&gt;nat</code>, which hands us an understandable integer&nbsp;<code>3</code>, which, since we paid
+        attention in school, we have good reason to believe is &nbsp;the correct answer.
       </p>
       <p>
         trlisp also provides the companion function, <code>Predecessor</code>.
@@ -1140,7 +1153,11 @@ x</code></pre>
       <p>
         Let&apos;s demonstrate addition by first binding trees to <code>Two</code> and <code>Three</code>.
       </p>
-      <pre><code>(def Two (nat-&gt;tree 2))</code><br><code>(def Three (nat-&gt;tree 3))</code><br><br><code>(-&gt; (Plus Two Three)
+      <pre><code>(def Two (nat-&gt;tree 2))</code><br><code>(def Three (nat-&gt;tree 3))</code></pre>
+      <p>
+        Then we evaluate the addition expression, feeding the result into <code>tree-&gt;nat</code> to convert the tree into a readable integer.
+      </p>
+      <pre><code>(-&gt; (Plus Two Three)
 &nbsp;   tree-&gt;nat) ;; =&gt; 5</code></pre>
       <p>
         Yup. Adding two to three results in five.
@@ -1152,7 +1169,7 @@ x</code></pre>
         Lists and tuples
       </h3>
       <p>
-        trlisp implements <em>2-tuples</em> with <code>Pair</code> and accessor functions <code>First</code> and <code>Second</code>.
+        trlisp implements <em>2-tuples</em> with <code>Pair</code> and provides accessor functions <code>First</code> and <code>Second</code>.
       </p>
       <pre><code>(Pair Two Three) ;; =&gt; [[[] [[] []]] [[] [[] [[] []]]]]</code><br><br><code>(-&gt; (Second (Pair Two Three))
 &nbsp;   tree-&gt;nat) ;; =&gt; 3</code></pre>
@@ -1172,57 +1189,62 @@ v0  Δ
         trlisp provides <code>List</code> to quickly construct a list from its arguments.
       </p>
       <p>
-        <code>Bite</code> constructs an <em>8-tuple</em> of bits, while strings are constructed with <code>String</code> from Bites representing the
-        characters&apos; <span class="small-caps">ascii</span> bytecodes.
+        <code>Bite</code> constructs an <em>8-tuple</em> of bits, while <code>String</code> constructs strings from Bites representing the characters&apos;
+        <span class="small-caps">ascii</span> byte encodings.
       </p>
       <p>
-        Append to lists with <code>Append</code> and reverse a trlisp list with <code>Reverse</code>.
+        Append to trlisp lists with <code>Append</code> and reverse a trlisp list with <code>Reverse</code>.
       </p>
       <h3 id="folding">
         Mapping and folding
       </h3>
       <p>
-        Tree calculus defines functions for operating on elements of a list. &nbsp;trlisp implements a <em>map</em>ping function that applies a function to
-        every element of a list a returns &nbsp;another list.
+        Tree calculus defines functions for operating on elements of a list. &nbsp;trlisp implements a <em>mapping</em> function that applies a function to
+        every element of a list a returns &nbsp;a new list with updated values.
       </p>
       <p>
         Let&apos;s construct a list of integers.
       </p>
-      <pre><code>(def our-list (List (nat-&gt;tree 2) (nat-&gt;tree 3) (nat-&gt;tree 4)))</code></pre>
+      <pre><code>(def Our-List (List (nat-&gt;tree 2) (nat-&gt;tree 3) (nat-&gt;tree 4)))</code></pre>
       <p>
-        Pretend we&apos;d like to increment, in-place, each of those integers. The <code>Successor</code> function makes a solid choice for incrementing.
+        Pretend we&apos;d like to have a new list containing each of those integers &nbsp;incremented by one. The <code>Successor</code> function makes a solid
+        choice for incrementing.
       </p>
       <p>
         The function signature for mapping is
       </p>
       <pre><code>(Map <em>function list</em>)</code></pre>
       <p>
+        Our expression will look like this.
+      </p>
+      <pre><code>(Map Successor Our-List)</code></pre>
+      <p>
         <code>Map</code> returns a tree, which is difficult to decipher. So we&apos;ll use <code>List-&gt;seq</code> to convert the tree calculus list into a
         Clojure sequence of tree integers, &nbsp;and then Clojure&apos;s <code>map</code> with <code>tree-&gt;nat</code> to convert each tree integer into a
         plain integer.
       </p>
-      <pre><code>(-&gt;&gt; (Map Successor our-list)
+      <pre><code>(-&gt;&gt; (Map Successor Our-List)
 &nbsp;    List-&gt;seq
 &nbsp;    (map tree-&gt;nat)) ;; =&gt; (3 4 5)</code></pre>
       <p>
         Excellent. <code>Map</code> incremented three integers contained in our list.
       </p>
       <p>
-        trlisp also implements tree calculus&apos; <em>fold</em>ing operations. The function signature for left-folding is
+        trlisp also implements tree calculus&apos; <em>folding</em> operations. The function signature for left-folding is
       </p>
       <pre><code>(Fold-Left <em>function init list</em>)</code></pre>
       <p>
         Let&apos;s compose those arguments. We&apos;ll use <code>Plus</code> since it&apos;s easy to eyeball it&apos;s effects. We&apos;ll assign a tree to an
         initial &nbsp;value.
       </p>
-      <pre><code>(def our-init (nat-&gt;tree 1))</code></pre>
+      <pre><code>(def Our-Init (nat-&gt;tree 1))</code></pre>
       <p>
-        We&apos;ll use the same list of integers from earlier, <code>our-list</code>.
+        We&apos;ll use the same list of integers from earlier, <code>Our-List</code>.
       </p>
       <p>
         Now, we invoke the fold, and convert the result to an integer we can &nbsp;recognize.
       </p>
-      <pre><code>(-&gt; (Fold-Left Plus our-init our-list)
+      <pre><code>(-&gt; (Fold-Left Plus Our-Init Our-List)
 &nbsp;   tree-&gt;nat) ;; =&gt; 10</code></pre>
       <p>
         <code>Fold-Left</code> adds one to two, then that result to three, then that result to four, &nbsp;yielding ten.
@@ -1243,14 +1265,16 @@ v0  Δ
       </p>
       <p>
         trlisp implements the both the tagging and type-check systems, but they&apos;re &nbsp;not user-friendly, nor comprehensive, so we won&apos;t discuss
-        them further.
+        them further. See &nbsp;the <a href=
+        "https://github.com/blosavio/trlisp/blob/085c0b686b18e7dd3de2c4d59f8dc81791613782/test/tree_calculus/definitions_test.clj#L496-L535">testing
+        namespace</a> for basic usage.
       </p>
       <h3 id="tree-analysis">
         Tree analysis
       </h3>
       <p>
-        Tree calculus&apos; tentpole feature is the ability of one function to inspect &nbsp;another function directly, without quoting. This feature is
-        enabled by the fact &nbsp;that all entities, functions and values, are composed of the same stuff: &nbsp;trees.
+        Tree calculus&apos; tentpole feature is the ability of one function to inspect &nbsp;another function directly, without quoting. This feature,
+        <em>reflection</em>, is enabled by the fact that all entities, functions and values, are &nbsp;composed of the same stuff: trees.
       </p>
       <p>
         trlisp implements several functions in this category, such as measuring &nbsp;the size of a function, determining the equality of two functions, and
@@ -1262,41 +1286,45 @@ v0  Δ
       <pre><code>(-&gt; (Size K)
 &nbsp;   tree-&gt;nat) ;; =&gt; 2</code></pre>
       <p>
-        Yes, the K combinator is composed of two nodes as we expect.
+        Yes, the K combinator is composed of two nodes as we expect. And we didn&apos;t &nbsp;need to operate on some quoted expression preceding a compilation
+        step. <code>Size</code> operated directory on K&apos;s defined value.
       </p>
       <p>
         We could also ask if two functions are equal. Let&apos;s see if the K &nbsp;combinator is equal to one leaf node descendant from another node.
       </p>
       <pre><code>(Equal? K (Δ Δ)) ;; =&gt; True</code></pre>
       <p>
-        Yes, the two trees are equal as we expect.
+        Yes, the two trees are equal as we expect. <code>Equal?</code> dived straight into the internal structures of <code>K</code> and
+        <code>(Δ&nbsp;Δ)</code> to do its job.
       </p>
       <p>
         Tree calculus&apos; <em>triage</em> defines a basic system for testing for leaves, stems, or forks. With triage &nbsp;in hand, tree calculus goes on to
         define <em>pattern matching</em>. As I understand it, pattern-matching answers the following question.
       </p>
       <p>
-        Given tree <em>A</em>,
+        Given tree&nbsp;<em>A</em>,
       </p>
       <pre><code>  Δ
 &nbsp;/ \
 Δ   foo</code></pre>
       <p>
-        and some target component of <em>A</em>,
+        and some target component of&nbsp;<em>A</em>,
       </p>
       <pre><code>foo</code></pre>
       <p>
-        and test tree <em>B</em>,
+        and test tree&nbsp;<em>B</em>,
       </p>
       <pre><code>  Δ
 &nbsp;/ \
 Δ   baz</code></pre>
       <p>
-        What is the <em>thing</em> located in tree <em>B</em> at the same location as <code>foo</code> in tree <em>A</em>? The answer is <code>baz</code>.
+        What is the <em>thing</em> located in tree&nbsp;<em>B</em> at the same location as <code>foo</code> in tree&nbsp;<em>A</em>? The answer is
+        <code>baz</code>.
       </p>
       <p>
-        trlisp implements both triage and pattern matching, and they pass some &nbsp;rudimentary unit tests, but I am not confident the tests are correct nor
-        &nbsp;sufficient.
+        trlisp implements both triage and pattern matching, and they pass some <a href=
+        "https://github.com/blosavio/trlisp/blob/085c0b686b18e7dd3de2c4d59f8dc81791613782/test/tree_calculus/definitions_test.clj#L592-L661">rudimentary unit
+        tests</a>, but I am not confident the tests are correct nor sufficient.
       </p>
       <p>
         At any rate, we <em>should</em> be impressed with the fact that all these functions, sophisticated as they &nbsp;are, are <a href=
@@ -1322,66 +1350,62 @@ v0  Δ
         Comments
       </h2>
       <p>
-        Two of tree calculus&apos; ideas intrigue me the most.
+        Two of tree calculus&apos; ideas caught my attention.
       </p>
       <ol>
         <li>
-          <strong>Every entity is composed of the same stuff.</strong>
+          <strong>One operator plus six application rules</strong>
           <p>
-            In this regard similar to lambda calculus, I find it interesting that a &nbsp;complete computing system can be made when functions and values are
-            composed &nbsp;from a single basic unit. In tree calculus&apos; case, it&apos;s the <code>Δ</code> operator. Don&apos;t miss the impressive
-            accomplishment: All the functions &nbsp;and values introduced here are defined with various trees composed of <code>Δ</code>. trlisp, via Clojure,
-            only provides variable binding and the most minimal &nbsp;machinery for evaluating expressions. Tree calculus does all the actual
-            &nbsp;computation.
+            Tree calculus&apos; minimalism hints that it could be implemented in &nbsp;constrained environments. Almost certainly a 6502 microprocessor,
+            probably on a &nbsp;punch card machine, but maybe even a marble machine by someone really clever.
+          </p>
+          <p>
+            Tree calculus is so compact, we can evaluate the expressions by hand. I &nbsp;wrote trlisp so that I could evaluate tree calculus expressions to
+            check my &nbsp;pencil and paper work, and to feel what it&apos;s like to program with. In that &nbsp;regard, trlisp provides that. While working
+            through the book&apos;s examples, trlisp &nbsp;can quickly validate an expression that takes multiple sheets of paper.
+          </p>
+          <p>
+            On the other hand, it is immediately apparent that trlisp is in no way a &nbsp;practical, general-purpose programming language. The inputs and
+            return values &nbsp;are trees, not plainly understandable integers and strings, and bugs are &nbsp;tedious to track down. It&apos;s not clear to me
+            that there is any advantage to &nbsp;writing an entirely new programming language (and associated tooling) based on &nbsp;tree calculus, or
+            grafting tree calculus&apos; evaluation model onto an existing &nbsp;language.
+          </p>
+          <p>
+            However, adapting some of tree calculus&apos; <em>features</em> to an existing programming language could be beneficial.
           </p>
         </li>
         <li>
-          <strong>One operator plus six application rules.</strong>
+          <strong>Every entity composed of the same stuff</strong>
           <p>
-            Tree calculus&apos; minimalism hints that it could be implemented in &nbsp;constrained environments, maybe a 6502 microprocessor, or a punch card
-            machine, &nbsp;or perhaps even a marble machine.
+            Check this out.
+          </p>
+          <pre><code>(Second D) ;; =&gt; (K Δ)</code></pre>
+          <p>
+            We just reached into the D&nbsp;combinator and pulled out its second element, &nbsp;i.e., the right child. We didn&apos;t resort to quoting or a
+            macro. The tree that &nbsp;implements the D&nbsp;combinator when it&apos;s at the head of a list, is, at any moment, &nbsp;available for
+            inspection. There is no separate notion of a function&apos;s &nbsp;definition that is distinct from the thing that executes the task.
+          </p>
+          <p>
+            Having such reflective functions, direct access to a function&apos;s &nbsp;definition, suggests some interesting possibilities. Being able to
+            inspect, &nbsp;analyze, optimize, modify, and borrow pieces from a function could enable tasks &nbsp;that are not currently easy, or even possible.
+            In recent memory, I have at &nbsp;least <a href="https://blosavio.github.io/speculoos/speculoos.utility.html#var-defpred">one utility</a> that
+            would have been faster and more elegant to write if I had run-time &nbsp;(not compile-time) access to the function&apos;s definition.
+          </p>
+          <p>
+            Could it be generally useful to be able to define a new function by &nbsp;modifying an existing one?
+          </p>
+          <pre><code>;; pseudo-code</code><br><code>(def my-new-fn (assoc old-fn ...))</code></pre>
+          <p>
+            When we speak of &apos;first-class functions&apos;, we generally mean that functions may be passed as values and returned from other functions. But
+            what if we could dive into a function and do something useful with its contents? Wouldn&apos;t reflective functions truly be
+            &apos;first-class&apos;?
+          </p>
+          <p>
+            We probably wouldn&apos;t use it often, but it could be nice tool in the toolbox. Something akin to writing a Lisp macro when a regular function
+            won&apos;t suffice. I can more easily imagine how this particular tree calculus feature might be added to an existing language.
           </p>
         </li>
       </ol>
-      <p>
-        I wrote trlisp so that I could evaluate tree calculus expressions to check &nbsp;my pencil and paper work, and to feel what it&apos;s like to work
-        with. In that &nbsp;regard, trlisp provides that. While working through the exercises, trlisp can &nbsp;quickly evaluate an expression that otherwise
-        takes multiple sheets of paper &nbsp;when written by hand.
-      </p>
-      <p>
-        On the other hand, it is immediately apparent that trlisp is in no way a &nbsp;practical, general-purpose programming language. Tree calculus appears
-        to be &nbsp;firmly in the academic realm, as its current formulation emphasizes features &nbsp;important to academia: proofs of correctness and
-        completeness, etc. All inputs &nbsp;must first be converted to a tree. Every tree returned from a function must be &nbsp;converted back to a value that
-        is recognizable. And causes of incorrect results &nbsp;are tedious to track down.
-      </p>
-      <p>
-        Finally, the fact that functions and values are all the same &apos;type&apos;, i.e., &nbsp;trees, makes some expressions nonsensical.
-      </p>
-      <pre><code><code>(Three K) ;; =&gt; 2</code></code></pre>
-      <p>
-        For example, due to the way numbers are encoded into trees, a number <em>n</em> applied to anything always returns <em>n-1</em> by the fork-leaf rule.
-      </p>
-      <p>
-        To implement a practical language, we&apos;d need to immediately develop an account for at least strong typing (but not necessarily static typing),
-        name-to-value binding, error-handling, and heterogeneous composite data structures (the features currently provided by trlisp&apos;s host, Clojure).
-        Soon after that, we&apos;d need to define performant versions of functions that operate on the generally necessary fundamental data types (i.e,
-        arithmetic in binary integers and floats, substitution on strings, etc.) At that point, we&apos;d be replicating Clojure, which wisely delegates much
-        of that to Java. A monumental undertaking, but possibly rewarding.
-      </p>
-      <h3 id="implications">
-        Implications
-      </h3>
-      <p>
-        It&apos;s not obvious to me how someone would integrate tree calculus&apos; node operator and application rules to an already existing programming
-        language, or even if there would be advantages in doing so. And we&apos;ve just discussed the formidable challenge of writing one from the ground up.
-      </p>
-      <p>
-        On the other hand, having direct access to a function&apos;s definition does suggest some interesting possibilities. Being able to inspect, analyze,
-        optimize, modify, and borrow pieces from a function could enable tasks that are not currently easy, or even possible. In recent memory, I have at least
-        <a href="https://blosavio.github.io/speculoos/speculoos.utility.html#var-defpred">one utility</a> that would have been faster and more elegant to write
-        if I had run-time (not compile-time) access to the function&apos;s definition. I wouldn&apos;t think it&apos;s a capability we&apos;d use often, but it
-        could be nice tool in the toolbox. Something akin to reluctantly writing a Lisp macro.
-      </p>
     </section>
     <section id="references">
       <h2>
@@ -1518,7 +1542,7 @@ v0  Δ
     <p></p>
     <p id="page-footer">
       Copyright © 2024–2025 Brad Losavio.<br>
-      Compiled by <a href="https://github.com/blosavio/readmoi">ReadMoi</a> on 2025 June 13.<span id="uuid"><br>
+      Compiled by <a href="https://github.com/blosavio/readmoi">ReadMoi</a> on 2025 June 15.<span id="uuid"><br>
       24d7622e-9828-4fe1-831b-4a4314e293e0</span>
     </p>
   </body>

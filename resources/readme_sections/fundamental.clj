@@ -1,10 +1,10 @@
 [:section#fundamental
- [:h2 "Fundamental functions"]
+ [:h2 "Fundamental combinators"]
 
- [:p "Tree calculus functions could be defined purely in terms of "
+ [:p "Tree calculus functions and values could be defined purely in terms of "
   [:code "Δ"]
-  ", but some judicious naming and binding helps make programming in trlisp more
- ergonomic. Let's "
+  ", but some judicious naming helps make programming in trlisp more ergonomic.
+ Let's "
   [:a {:href "https://blosavio.github.io/trlisp/tree-calculus.definitions.html"}
    "define"]
   " a small number of fundamental functions, and along the way, we will see the
@@ -24,7 +24,7 @@
  [:p "Given trees "
   [:code "Δ"]
   " and "
-  [:code "(Δ Δ Δ)"]
+  [:code "(Δ Δ Δ)"]
   ", "
   [:code "K"]
   " returns "
@@ -38,11 +38,11 @@
  rules that "
   [:a {:href "#apply-fork-leaf"} "Rule 3"]
   " declares that a fork-leaf always returns the first of a pair of arguments.
- So we know that we can create a K combinator by adopting that fork-leaf
+ So we know that we can create a K combinator by adopting that fork-leaf
  pattern." ]
 
  [:p "Putting an expression that evaluates to a fork-leaf "
-  [:code "(Δ Δ)"]
+  [:code "(Δ Δ)"]
   " in the function position and applying it to two arguments, dispatches on
  application Rule 3, and returns the first argument."]
 
@@ -52,7 +52,7 @@
   [:code "(Δ Δ)"]
   " evaluates to "
   [:code "K"]
-  " so this expression returns the exact same "
+  ", so this expression returns the exact same "
   [:code "Δ"]
   " as before."]
 
@@ -67,7 +67,7 @@
   " shows us that "
   [:code "K"]
   " is simply defined as "
-  [:code "(Δ Δ)"]
+  [:code "(Δ Δ)"]
   ". Now that the symbol "
   [:code "K"]
   " is bound to a tree that creates a fork-leaf tree when given two arguments, we
@@ -94,9 +94,7 @@
 
  [:pre (make-fork-stem "Δ" "(K Δ)")]
 
- [:p "To see "
-  [:code "D"]
-  " in action, we'll assign "
+ [:p "To see D in action, we'll assign "
   [:code "x"]
   ", "
   [:code "y"]
@@ -117,19 +115,19 @@
  [:pre (replace-trees (print-form-then-eval "(y z)"))]
 
  [:p "because "
-  [:code "(K Δ K)"]
+  [:code "(K Δ K)"]
   " yields "
   [:code "Δ"]
-  " due to application of the K combinator."]
+  " due to application of the K combinator."]
 
  [:p "The second sub-component is identical to the first."]
 
  [:pre (replace-trees (print-form-then-eval "(x z)"))]
 
  [:p "Now let's evaluate the value of "
-  [:code "(y z)"]
+  [:code "(y z)"]
   " applied to the value of "
-  [:code "(x z)"]
+  [:code "(x z)"]
   "."]
 
  [:pre (replace-trees (print-form-then-eval "(Δ Δ)"))]
@@ -150,10 +148,10 @@
 
  [:pre (replace-trees (print-form-then-eval "(D x y z)"))]
 
- [:p "Notice that, as with the K combinator, the D combinator is a tree
+ [:p "Notice that, as with the K combinator, the D combinator is a tree
  deliberately composed to invoke a particular application rule, in this
  instance, Rule 4 for fork-stems. After a couple rounds of application, we
- obtain the following expression."]
+ obtain the following picture."]
 
  [:pre [:code (make-fork-stem "x" "y" "z")]]
 
@@ -161,7 +159,7 @@
 
  [:pre [:code "((y z) (x z))"]]
 
- [:p "which is the D combinator's essence."]
+ [:p "which is the D combinator's essence."]
 
  [:p "If we work out that sequence of evaluations by hand, we notice that D
  applied to the first argument "
@@ -180,7 +178,7 @@
 
  [:pre [:code "((d x) y z) ;; => ((y z) (x z))"]]
 
- [:p " which is the same result produced by the D combinator."]
+ [:p " which is the same result produced by the D combinator."]
 
  [:h3#S-combinator "S combinator"]
 
@@ -190,7 +188,7 @@
  while maintaining the order."]
 
  [:p "The "
-  [:em "S combinator"]
+  [:em "S combinator"]
   " works like this"]
 
  [:pre [:code "(S x y z) ;; => ((x z) (y z))"]]
@@ -202,7 +200,7 @@
   [:code "d"]
   ", "
   [:code "D"]
-  ", and "
+  ", and "
   [:code "K"]
   "."]
 
@@ -230,7 +228,7 @@
  [:h3#I-combinator "I combinator"]
 
  [:p "Another crucial combinator is the "
-  [:em "I combinator"]
+  [:em "I combinator"]
   ", which returns exactly its single argument."]
 
  [:pre [:code "(I x) ;; => x"]]
@@ -254,13 +252,13 @@
                    "|   |\n"
                    "Δ   Δ")]]
 
- [:p "Note that the tree structure of I combinator is designed to invoke
+ [:p "Note that the tree structure of I combinator is designed to invoke
  Rule 4, applying fork-stems, then immediately thereafter applies
  Rule 3, for fork-leaves to discard the second expression, returning
  exactly the argument. "
-  [:em "The structure encodes the behavior."]]
+  [:strong "The structure encodes the behavior."]]
 
- [:p "The I combinator appears in many upcoming definitions, including a key
+ [:p "The I combinator appears in many upcoming definitions, including a key
  role in defining Boolean entities."]
 
  [:h3#Y-combinator "Y combinator"]
@@ -291,9 +289,10 @@
 
   " combinators, but does not use them for any further purposes."]
 
- [:p "It turns out that we won't often directly use any of these fundamental
- functions in day-to-day programming, but they are critical building blocks for
- the functions we "
+ [:p "It turns out that we wouldn't often directly use any of these combinators
+ in day-to-day programming, but they are critical building blocks for the "
+  [:a {:href "#base"} "functions"]
+  " we "
   [:em "do"]
   " use."]
  ]

@@ -1,8 +1,10 @@
 [:section#base
  [:h2 "Base functions"]
 
- [:p "Now we'll discuss functions that might be useful for solving day-to-day
- problems. We should always keep in mind that these functions are "
+ [:p "In contrast to the "
+  [:a {:href "#fundamental"} "fundamental combinators"]
+  ", these functions might be useful for solving day-to-day problems. We should
+ continually keep in mind that these functions are "
   [:a {:href "https://github.com/blosavio/trlisp/blob/0f9f83904ebf16b54e8429ab5559aebce6e00b77/src/tree_calculus/definitions.clj#L129"}
    "defined"]
   " (almost) solely in terms of "
@@ -50,7 +52,7 @@
  [:p "Similar to Church encoding, tree calculus represents natural numbers as
  repeated application of "
   [:code "K"]
-  " such that number "
+  " such that number "
   [:em "n"]
   " is represented by "
   [:em "K" [:sup "n"] "Δ"]
@@ -101,12 +103,12 @@
   (print-form-then-eval "(nat->tree 2)") [:br] [:br]
   (print-form-then-eval "(tree->nat (K (K Δ)))")]
 
- [:p "All the following functions require us to supply the arguments as the tree
- representation, not the plain integers, so we'll be replying on "
+ [:p "All the following functions require us to supply the arguments as trees,
+ not plain integers, so we'll often be relying on "
   [:code "nat->tree"]
   " and "
   [:code "tree->nat"]
-  "."]
+  ". Here's why."]
 
  [:p "trlisp provides the classic "
   [:em "increment"]
@@ -144,13 +146,13 @@
   " into "
   [:code "nat->tree"]
   ", which converts it into the tree representation "
-  [:code (str (nat->tree 2))]
+  [:code (clojure.string/replace (str (nat->tree 2)) #" " " ")]
   ". Then, we feed that tree into "
   [:code "Successor"]
   ", which does its calculation, returning yet another tree. Finally, we feed
  that tree into "
   [:code "tree->nat"]
-  ", which hands us an understandable integer "
+  ", which hands us an understandable integer "
   [:code "3"]
   ", which, since we paid attention in school, we have good reason to believe is
  the correct answer."]
@@ -176,10 +178,13 @@
  [:pre
   (print-form-then-eval "(def Two (nat->tree 2))")
   [:br]
-  (print-form-then-eval "(def Three (nat->tree 3))")
-  [:br]
-  [:br]
-  (print-form-then-eval "(-> (Plus Two Three)
+  (print-form-then-eval "(def Three (nat->tree 3))")]
+
+ [:p "Then we evaluate the addition expression, feeding the result into "
+  [:code "tree->nat"]
+  " to convert the tree into a readable integer."]
+
+ [:pre (print-form-then-eval "(-> (Plus Two Three)
                                tree->nat)")]
 
  [:p "Yup. Adding two to three results in five."]
@@ -194,7 +199,7 @@
   [:em "2-tuples"]
   " with "
   [:code "Pair"]
-  " and accessor functions "
+  " and provides accessor functions "
   [:code "First"]
   " and "
   [:code "Second"]
@@ -227,13 +232,13 @@
 
  [:p [:code "Bite"] " constructs an "
   [:em "8-tuple"]
-  " of bits, while strings are constructed with "
+  " of bits, while "
   [:code "String"]
-  " from Bites representing the characters' "
+  " constructs strings from Bites representing the characters' "
   [:span.small-caps "ascii"]
-  " bytecodes."]
+  " byte encodings."]
 
- [:p "Append to lists with "
+ [:p "Append to trlisp lists with "
   [:code "Append"]
   " and reverse a trlisp list with "
   [:code "Reverse"]
@@ -243,23 +248,28 @@
 
  [:p "Tree calculus defines functions for operating on elements of a list.
  trlisp implements a "
-  [:em "map"]
-  "ping function that applies a function to every element of a list a returns
- another list."]
+  [:em "mapping"]
+  " function that applies a function to every element of a list a returns
+ a new list with updated values."]
 
  [:p "Let's construct a list of integers."]
 
- [:pre (print-form-then-eval "(def our-list (List (nat->tree 2)
+ [:pre (print-form-then-eval "(def Our-List (List (nat->tree 2)
                                                   (nat->tree 3)
                                                   (nat->tree 4)))")]
 
- [:p "Pretend we'd like to increment, in-place, each of those integers. The "
+ [:p "Pretend we'd like to have a new list containing each of those integers
+ incremented by one. The "
   [:code "Successor"]
   " function makes a solid choice for incrementing."]
 
  [:p "The function signature for mapping is"]
 
  [:pre [:code "(Map " [:em "function list"] ")"]]
+
+ [:p "Our expression will look like this."]
+
+ [:pre [:code "(Map Successor Our-List)"]]
 
  [:p [:code "Map"]
   " returns a tree, which is difficult to decipher. So we'll use "
@@ -271,7 +281,7 @@
   [:code "tree->nat"]
   " to convert each tree integer into a plain integer."]
 
- [:pre (print-form-then-eval "(->> (Map Successor our-list)
+ [:pre (print-form-then-eval "(->> (Map Successor Our-List)
                                    List->seq
                                    (map tree->nat))")]
 
@@ -280,8 +290,8 @@
   " incremented three integers contained in our list."]
 
  [:p "trlisp also implements tree calculus' "
-  [:em "fold"]
-  "ing operations. The function signature for left-folding is"]
+  [:em "folding"]
+  " operations. The function signature for left-folding is"]
 
  [:pre [:code "(Fold-Left " [:em "function init list"] ")"]]
 
@@ -290,16 +300,16 @@
   " since it's easy to eyeball it's effects. We'll assign a tree to an initial
  value."]
 
- [:pre (print-form-then-eval "(def our-init (nat->tree 1))")]
+ [:pre (print-form-then-eval "(def Our-Init (nat->tree 1))")]
 
  [:p "We'll use the same list of integers from earlier, "
-  [:code "our-list"]
+  [:code "Our-List"]
   "."]
 
  [:p "Now, we invoke the fold, and convert the result to an integer we can
  recognize."]
 
- [:pre (print-form-then-eval "(-> (Fold-Left Plus our-init our-list)
+ [:pre (print-form-then-eval "(-> (Fold-Left Plus Our-Init Our-List)
                                   tree->nat)")]
 
  [:p [:code "Fold-Left"]
@@ -320,14 +330,19 @@
  application."]
 
  [:p "trlisp implements the both the tagging and type-check systems, but they're
- not user-friendly, nor comprehensive, so we won't discuss them further."]
+ not user-friendly, nor comprehensive, so we won't discuss them further. See
+ the "
+  [:a {:href "https://github.com/blosavio/trlisp/blob/085c0b686b18e7dd3de2c4d59f8dc81791613782/test/tree_calculus/definitions_test.clj#L496-L535"}
+   " testing namespace"]
+  " for basic usage."]
 
  [:h3#tree-analysis "Tree analysis"]
 
  [:p "Tree calculus' tentpole feature is the ability of one function to inspect
- another function directly, without quoting. This feature is enabled by the fact
- that all entities, functions and values, are composed of the same stuff:
- trees."]
+ another function directly, without quoting. This feature, "
+  [:em "reflection"]
+  ", is enabled by the fact that all entities, functions and values, are
+ composed of the same stuff: trees."]
 
  [:p "trlisp implements several functions in this category, such as measuring
  the size of a function, determining the equality of two functions, and running
@@ -340,14 +355,23 @@
  [:pre (print-form-then-eval "(-> (Size K)
                                   tree->nat)")]
 
- [:p "Yes, the K combinator is composed of two nodes as we expect."]
+ [:p "Yes, the K combinator is composed of two nodes as we expect. And we didn't
+ need to operate on some quoted expression preceding a compilation step. "
+  [:code "Size"]
+  " operated directory on K's defined value."]
 
  [:p "We could also ask if two functions are equal. Let's see if the K
  combinator is equal to one leaf node descendant from another node."]
 
  [:pre (replace-booleans (print-form-then-eval "(Equal? K (Δ Δ))"))]
 
- [:p "Yes, the two trees are equal as we expect."]
+ [:p "Yes, the two trees are equal as we expect. "
+  [:code "Equal?"]
+  " dived straight into the internal structures of "
+  [:code "K"]
+  " and "
+  [:code "(Δ Δ)"]
+  " to do its job."]
 
  [:p "Tree calculus' "
   [:em "triage"]
@@ -356,19 +380,19 @@
   [:em " pattern matching"]
   ". As I understand it, pattern-matching answers the following question."]
 
- [:p "Given tree "
+ [:p "Given tree "
   [:em "A"]
   ","]
 
  [:pre [:code (make-fork "Δ" "foo")]]
 
- [:p "and some target component of "
+ [:p "and some target component of "
   [:em "A"]
   ","]
 
  [:pre [:code "foo"]]
 
- [:p "and test tree "
+ [:p "and test tree "
   [:em "B"]
   ","]
 
@@ -376,19 +400,20 @@
 
  [:p "What is the "
   [:em "thing"]
-  " located in tree "
+  " located in tree "
   [:em "B"]
   " at the same location as "
   [:code "foo"]
-  " in tree "
+  " in tree "
   [:em "A"]
   "? The answer is "
   [:code "baz"]
   "."]
 
- [:p "trlisp implements both triage and pattern matching, and they pass some
- rudimentary unit tests, but I am not confident the tests are correct nor
- sufficient."]
+ [:p "trlisp implements both triage and pattern matching, and they pass some "
+  [:a {:href "https://github.com/blosavio/trlisp/blob/085c0b686b18e7dd3de2c4d59f8dc81791613782/test/tree_calculus/definitions_test.clj#L592-L661"}
+   "rudimentary unit tests"]
+  ", but I am not confident the tests are correct nor sufficient."]
 
  [:p "At any rate, we "
   [:em "should"]
