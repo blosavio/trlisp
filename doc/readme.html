@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta name="generator" content="HTML Tidy for HTML5 for Linux version 5.6.0">
-    <meta charset="utf-8" compile-date="2025-06-15 10:22:46" content="width=device-width, initial-scale=1" name="viewport">
+    <meta charset="utf-8" compile-date="2025-06-16 09:55:44" content="width=device-width, initial-scale=1" name="viewport">
     <link href="project.css" rel="stylesheet" type="text/css">
     <title>
       trlisp — A Lisp-y implementation of B. Jay's unlabelled binary tree calculus
@@ -71,8 +71,8 @@
       </ul>
       <p></p>
       <p>
-        <em>trlisp</em> is an implementation of tree calculus with the compact, uniform grammar of Lisp. The element at the head of a list, the function
-        position, is invoked, with the elements of the tail of the list providing the arguments.
+        <em>trlisp</em> is an implementation of tree calculus with Lisp's compact, uniform grammar. The element at the head of a list, the function position,
+        is invoked, with the elements of the tail of the list providing the arguments.
       </p>
       <p>
         Unlike traditional Lisps, trlisp functions may be transparently decomposed so that the function may be inspected, analyzed, compared, optimized,
@@ -1355,33 +1355,34 @@ v0  Δ
             punch card machine, but maybe even a marble machine by someone really clever.
           </p>
           <p>
-            Tree calculus is so compact, we can evaluate the expressions by hand. I wrote trlisp so that I could evaluate tree calculus expressions to check my
+            Tree calculus is so concise, we can evaluate the expressions by hand. I wrote trlisp so that I could evaluate tree calculus expressions to <a href=
+            "https://github.com/blosavio/trlisp/blob/a40862ed5d0036ca84d77a1e922a68ed0eb007ff/test/tree_calculus/exercising_test.clj#L100-L174">check</a> my
             pencil and paper work, and to feel what it's like to program with. In that regard, trlisp provides that. While working through the book's examples,
             trlisp can quickly validate an expression that takes multiple sheets of paper.
           </p>
           <p>
             On the other hand, it is immediately apparent that trlisp is in no way a practical, general-purpose programming language. The inputs and return
-            values are trees, not plainly understandable integers and strings, and bugs are tedious to track down. It's not clear to me that there is any
-            advantage to writing an entirely new programming language (and associated tooling) based on tree calculus, or grafting tree calculus' evaluation
-            model onto an existing language.
+            values are trees, not plainly understandable integers and strings, and bugs are tedious to track down. trlisp kinda grafts tree calculus'
+            evaluation model onto an existing language. What advantages could an entirely new programming language based on tree calculus offer?
           </p>
           <p>
-            However, adapting some of tree calculus' <em>features</em> to an existing programming language could be beneficial.
+            Instead of adding tree calculus itself to another programming language, adapting some of tree calculus' <em>features</em> to an existing
+            programming language could be beneficial.
           </p>
         </li>
         <li>
-          <strong>Every entity composed of the same stuff</strong>
+          <strong>Decomposable functions</strong>
           <p>
             Check this out.
           </p>
           <pre><code>(Second D) ;; =&gt; (K Δ)</code></pre>
           <p>
-            We just reached into the D&nbsp;combinator and pulled out its second element, i.e., the right child. We didn't resort to quoting or a macro. The
-            tree that implements the D&nbsp;combinator when it's at the head of a list, is, at any moment, available for inspection. There is no separate
-            notion of a function's definition that is distinct from the thing that executes the task.
+            We just reached into the D&nbsp;combinator, a function-like thing, and pulled out its second element, i.e., the right child. We didn't resort to
+            quoting or a macro. The tree that implements the D&nbsp;combinator is, at any moment, available for inspection. There is no separate notion of a
+            function's definition that is distinct from the thing that executes the task.
           </p>
           <p>
-            Having such reflective functions, direct access to a function's definition, suggests some interesting possibilities. Being able to inspect,
+            Having such reflective functions, i.e., direct access to a function's definition, suggests some interesting possibilities. Being able to inspect,
             analyze, optimize, modify, and borrow pieces from a function could enable tasks that are not currently easy, or even possible. In recent memory, I
             have at least <a href="https://blosavio.github.io/speculoos/speculoos.utility.html#var-defpred">one utility</a> that would have been faster and
             more elegant to write if I had run-time (not compile-time) access to the function's definition.
@@ -1395,7 +1396,7 @@ v0  Δ
             we could dive into a function and do something useful with its contents? Wouldn't reflective functions truly be 'first-class'?
           </p>
           <p>
-            We probably wouldn't use it often, but it could be nice tool in the toolbox. Something akin to writing a Lisp macro when a regular function won't
+            We probably wouldn't use it often, but it could be a nice tool in the toolbox. Something akin to writing a Lisp macro when a regular function won't
             suffice. I can more easily imagine how this particular tree calculus feature might be added to an existing language.
           </p>
         </li>
@@ -1470,7 +1471,7 @@ v0  Δ
         </dt>
         <dd>
           <p>
-            Bind a name (a Cloujure symbol) to tree. That name evaluates to the original tree wherever it appears in an expression.
+            Bind a name (a Clojure symbol) to tree. That name evaluates to the original tree wherever it appears in an expression.
           </p>
         </dd>
         <dt id="fork">
@@ -1536,7 +1537,7 @@ v0  Δ
     <p></p>
     <p id="page-footer">
       Copyright © 2024–2025 Brad Losavio.<br>
-      Compiled by <a href="https://github.com/blosavio/readmoi">ReadMoi</a> on 2025 June 15.<span id="uuid"><br>
+      Compiled by <a href="https://github.com/blosavio/readmoi">ReadMoi</a> on 2025 June 16.<span id="uuid"><br>
       24d7622e-9828-4fe1-831b-4a4314e293e0</span>
     </p>
   </body>

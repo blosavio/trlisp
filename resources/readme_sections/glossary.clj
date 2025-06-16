@@ -28,7 +28,7 @@
  values and manipulated."]]
 
   [:dt#define "define"]
-  [:dd [:p "Bind a name (a Cloujure symbol) to tree. That name evaluates to the
+  [:dd [:p "Bind a name (a Clojure symbol) to tree. That name evaluates to the
  original tree wherever it appears in an expression."]]
 
   [:dt#fork "fork"]

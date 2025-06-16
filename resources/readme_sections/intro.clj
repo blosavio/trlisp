@@ -27,10 +27,9 @@
    [:li [:strong "Modification"] " We may change some facet of the function at
  runtime to suit our needs."]]]
 
- [:p [:em "trlisp"] " is an implementation of tree calculus with the compact,
- uniform grammar of Lisp. The element at the head of a list, the function
- position, is invoked, with the elements of the tail of the list providing
- the arguments."]
+ [:p [:em "trlisp"] " is an implementation of tree calculus with Lisp's compact,
+ uniform grammar. The element at the head of a list, the function position, is
+ invoked, with the elements of the tail of the list providing the arguments."]
 
  [:p "Unlike traditional Lisps, trlisp functions may be transparently decomposed
  so that the function may be inspected, analyzed, compared, optimized,
