@@ -1356,7 +1356,7 @@ v0  Δ
         <li>
           <strong>One operator plus six application rules</strong>
           <p>
-            Tree calculus&apos; minimalism hints that it could be implemented in &nbsp;constrained environments. Almost certainly a 6502 microprocessor,
+            Tree calculus&apos; minimalism hints that it could be implemented in &nbsp;constrained environments. Almost certainly a 6502&nbsp;microprocessor,
             probably on a &nbsp;punch card machine, but maybe even a marble machine by someone really clever.
           </p>
           <p>
@@ -1433,13 +1433,35 @@ v0  Δ
             Johannes Bader&apos;s <a href="https://treecalcul.us/">Tree Calculus</a> page
           </p>
           <p>
-            Tree calculus advocacy, examples, and interactive demos. Note: The application rules are different than here, but equivalent. Bader also wrote a
-            nice <a href="https://olydis.medium.com/a-visual-introduction-to-tree-calculus-2f4a34ceffc2">introduction blog post</a>.
+            Tree calculus advocacy, examples, and interactive demos. Note: The application rules are different than here, but the systems are equivalent. Bader
+            also wrote a nice <a href="https://olydis.medium.com/a-visual-introduction-to-tree-calculus-2f4a34ceffc2">introduction blog post</a>.
           </p>
         </li>
         <li>
           <p>
             Timur Latypoff&apos;s <a href="https://latypoff.com/tree-calculus-visualized/">Tree calculus, visualized</a>
+          </p>
+        </li>
+        <li>
+          <p>
+            James Eversole&apos;s <a href="https://git.eversole.co/James/tricu">tricu</a>
+          </p>
+          <p>
+            Tree calculus implemented in Haskell.
+          </p>
+        </li>
+      </ul>
+      <h3>
+        Other references
+      </h3>
+      <ul>
+        <li>
+          <p>
+            Palmer, Filardo, &amp; Wu <a href="https://www.cs.swarthmore.edu/~zpalmer/publications/intensional-functions.pdf">Intensional functions</a> (pdf,
+            2024)
+          </p>
+          <p>
+            Discusses how intensional functions offer non-application operations, such as comparison, serialization, hashing, etc.
           </p>
         </li>
       </ul>
@@ -1545,7 +1567,7 @@ v0  Δ
     <p></p>
     <p id="page-footer">
       Copyright © 2024–2025 Brad Losavio.<br>
-      Compiled by <a href="https://github.com/blosavio/readmoi">ReadMoi</a> on 2025 June 16.<span id="uuid"><br>
+      Compiled by <a href="https://github.com/blosavio/readmoi">ReadMoi</a> on 2025 June 17.<span id="uuid"><br>
       24d7622e-9828-4fe1-831b-4a4314e293e0</span>
     </p>
   </body>

@@ -8,7 +8,7 @@
    [:strong "One operator plus six application rules"]
 
    [:p "Tree calculus' minimalism hints that it could be implemented in
- constrained environments. Almost certainly a 6502 microprocessor, probably on a
+ constrained environments. Almost certainly a 6502 microprocessor, probably on a
  punch card machine, but maybe even a marble machine by someone really clever."]
 
    [:p "Tree calculus is so concise, we can evaluate the expressions by hand. I
