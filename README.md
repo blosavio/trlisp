@@ -22,11 +22,11 @@
       <h3>
         Leiningen/Boot
       </h3>
-      <pre><code>[com.sagevisuals/trlisp &quot;0-SNAPSHOT0&quot;]</code></pre>
+      <pre><code>[com.sagevisuals/trlisp &quot;0&quot;]</code></pre>
       <h3>
         Clojure CLI/deps.edn
       </h3>
-      <pre><code>com.sagevisuals/trlisp {:mvn/version &quot;0-SNAPSHOT0&quot;}</code></pre>
+      <pre><code>com.sagevisuals/trlisp {:mvn/version &quot;0&quot;}</code></pre>
       <h3>
         Require
       </h3>
@@ -1567,7 +1567,7 @@ v0  Δ
     <p></p>
     <p id="page-footer">
       Copyright © 2024–2025 Brad Losavio.<br>
-      Compiled by <a href="https://github.com/blosavio/readmoi">ReadMoi</a> on 2025 June 17.<span id="uuid"><br>
+      Compiled by <a href="https://github.com/blosavio/readmoi">ReadMoi</a> on 2025 July 12.<span id="uuid"><br>
       24d7622e-9828-4fe1-831b-4a4314e293e0</span>
     </p>
   </body>
