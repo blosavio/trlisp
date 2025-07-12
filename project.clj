@@ -1,4 +1,4 @@
-(defproject com.sagevisuals/trlisp "0-SNAPSHOT0"
+(defproject com.sagevisuals/trlisp "0-SNAPSHOT1"
   :description "A Lisp-y implementation of B. Jay's unlabelled binary tree
  calculus."
   :url "https://github.com/blosavio/trlisp"

@@ -13,7 +13,7 @@
                                  make-thingy]]))
 
 
-(load-file "src/tree_calculus/docstrings.clj")
+(load "docstrings")
 
 
 (Defn length-is? [n] #(= n (count %)))

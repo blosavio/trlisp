@@ -11,3 +11,6 @@ pom.xml.asc
 /.nrepl-port
 .gitignore
 .git/**
+.lein-failures
+.lein-repl-history
+.nrepl-port
